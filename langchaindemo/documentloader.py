@@ -48,9 +48,9 @@ def load_word_from_dir(directory_path):
     data = []
     for filename in os.listdir(directory_path):
         # check if the file is a doc or docx file
-        # 妫€鏌ユ墍鏈塪oc浠ュ強docx鍚庣紑鐨勬枃浠?
+        # 检查所有doc以及docx后缀的文件
         if filename.endswith(".doc") or filename.endswith(".docx"):
-            # langchain鑷甫鍔熻兘锛屽姞杞絯ord鏂囨。
+            # langchain自带功能，加载word文档
             loader = UnstructuredWordDocumentLoader(f'{directory_path}/{filename}')
             data.append(loader.load())
     return data
@@ -129,6 +129,7 @@ def load_all_from_dir(directory_path, glob, show_progress=False, use_multithread
     return data
  
 if __name__ == '__main__':
-    res = load_text_from_one("knowledge_base/outputcsvtxt_62.txt")
+    #res = load_all_from_dir("./knowledge_base/","*")
+    res = load_txt_from_dir("knowledge_base/")
     print(res)
  
