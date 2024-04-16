@@ -23,7 +23,7 @@ class Conversation:
         try:
             messages=[{"role": "system", "content": "你是上海直达软件公司训练的一个耐心、友好、专业的企业技术支持客服，能够为客户查询特定的产品或合约信息.用中文交流！"}]
             messages.append({"role": "user", "content": question})
-            self.messages.append({"role": "user", "content": question})
+            #self.messages.append({"role": "user", "content": question})
             response = self.client.chat.completions.create(
                 model="gpt-4",
                 messages=messages,
