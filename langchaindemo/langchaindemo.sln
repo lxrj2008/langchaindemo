@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "langchaindemo", "langchaindemo.pyproj", "{951A12BD-D884-4FA7-9711-1DEAEA7D7EB7}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "simpleaichat", "..\simpleaichat\simpleaichat.pyproj", "{2A30379A-CA5F-43F3-A7C3-639058A897BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{951A12BD-D884-4FA7-9711-1DEAEA7D7EB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{951A12BD-D884-4FA7-9711-1DEAEA7D7EB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A30379A-CA5F-43F3-A7C3-639058A897BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A30379A-CA5F-43F3-A7C3-639058A897BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

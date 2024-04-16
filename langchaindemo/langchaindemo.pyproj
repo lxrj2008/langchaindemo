@@ -12,7 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>langchaindemo</Name>
     <RootNamespace>langchaindemo</RootNamespace>
-    <InterpreterId>Global|VisualStudio|langchain</InterpreterId>
+    <InterpreterId>Global|VisualStudio|zdchat</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,9 +24,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="test.py" />
+    <Compile Include="test2.py" />
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="Global|VisualStudio|langchain" />
+    <InterpreterReference Include="Global|VisualStudio|zdchat" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
