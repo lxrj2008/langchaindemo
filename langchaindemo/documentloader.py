@@ -119,10 +119,10 @@ def load_csv_from_one(filename):
  
  
 # load all files from directory
-# param glob = "**/*.鏂囦欢鍚庣紑"  鎺у埗瑕佸姞杞界殑鏂囦欢
-# param show_progress = true 鏄剧ず杩涘害鏉?
-# param use_multithreading = true 鍒╃敤澶氱嚎绋?
-# param loader_cls = CSVLoader  鎸囧畾鍔犺浇鍣?| UnstructuredFileLoader
+# param glob = "**/*.文件后缀"  控制要加载的文件
+# param show_progress = true 显示进度条
+# param use_multithreading = true 利用多线程
+# param loader_cls = CSVLoader  指定加载器 | UnstructuredFileLoader
 def load_all_from_dir(directory_path, glob, show_progress=False, use_multithreading=False, loader_cls=UnstructuredFileLoader):
     loader = DirectoryLoader(directory_path, glob=glob, show_progress=show_progress, use_multithreading=use_multithreading, loader_cls=loader_cls)
     data = loader.load()

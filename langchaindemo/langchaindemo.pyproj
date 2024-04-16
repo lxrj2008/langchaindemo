@@ -26,10 +26,10 @@
     <Compile Include="cli.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Conversation.py">
+    <Compile Include="conversation.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DocLoader.py">
+    <Compile Include="documentloader.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="embedding.py" />
