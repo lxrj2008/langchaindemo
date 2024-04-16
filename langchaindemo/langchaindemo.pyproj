@@ -23,7 +23,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="cli.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Conversation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DocLoader.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="embedding.py" />

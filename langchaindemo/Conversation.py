@@ -1,4 +1,4 @@
-# coding=gbk
+
 import imp
 from openai import AzureOpenAI
 import os
@@ -21,7 +21,7 @@ class Conversation:
 
     def ask(self, question):
         try:
-            messages=[{"role": "system", "content": "ÄãÊÇÉÏº£Ö±´ïÈí¼ş¹«Ë¾ÑµÁ·µÄÒ»¸öÄÍĞÄ¡¢ÓÑºÃ¡¢×¨ÒµµÄÆóÒµ¼¼ÊõÖ§³Ö¿Í·ş£¬ÄÜ¹»Îª¿Í»§²éÑ¯ÌØ¶¨µÄ²úÆ·»òºÏÔ¼ĞÅÏ¢.ÓÃÖĞÎÄ½»Á÷£¡"}]
+            messages=[{"role": "system", "content": "ä½ æ˜¯ä¸Šæµ·ç›´è¾¾è½¯ä»¶å…¬å¸è®­ç»ƒçš„ä¸€ä¸ªè€å¿ƒã€å‹å¥½ã€ä¸“ä¸šçš„ä¼ä¸šæŠ€æœ¯æ”¯æŒå®¢æœï¼Œèƒ½å¤Ÿä¸ºå®¢æˆ·æŸ¥è¯¢ç‰¹å®šçš„äº§å“æˆ–åˆçº¦ä¿¡æ¯.ç”¨ä¸­æ–‡äº¤æµï¼"}]
             messages.append({"role": "user", "content": question})
             #self.messages.append({"role": "user", "content": question})
             response = self.client.chat.completions.create(
@@ -57,7 +57,7 @@ class Conversation:
                     #       "tool_call_id": tool_call.id,
                     #        "role": "tool",
                     #        "name": function_name,
-                    #        "content": f"{function_response},ÒÔjson¸ñÊ½Êä³ö",
+                    #        "content": f"{function_response},ä»¥jsonæ ¼å¼è¾“å‡º",
                     #   }
                     #)
                     messages.append(
@@ -65,7 +65,7 @@ class Conversation:
                            "tool_call_id": tool_call.id,
                             "role": "tool",
                             "name": function_name,
-                            "content": f"{function_response},ÒÔjson¸ñÊ½Êä³ö",
+                            "content": f"{function_response},ä»¥jsonæ ¼å¼è¾“å‡º",
                        }
                     )
                 second_response = self.client.chat.completions.create(
@@ -88,38 +88,38 @@ class Conversation:
 
         
 
-def get_current_weather(location, unit="ÉãÊÏ¶È£¨¡æ£©"):
-    """»ñÈ¡¸ø¶¨Î»ÖÃµÄÌìÆøÇé¿ö"""
-    if "ÉÏº£" in location.lower():
-        return json.dumps({"location": "ÉÏº£", "temperature": "10", "unit": unit})
-    elif "±±¾©" in location.lower():
-        return json.dumps({"location": "±±¾©", "temperature": "15", "unit": unit})
-    elif "¹ãÖİ" in location.lower():
-        return json.dumps({"location": "¹ãÖİ", "temperature": "17", "unit": unit})
+def get_current_weather(location, unit="æ‘„æ°åº¦ï¼ˆâ„ƒï¼‰"):
+    """è·å–ç»™å®šä½ç½®çš„å¤©æ°”æƒ…å†µ"""
+    if "ä¸Šæµ·" in location.lower():
+        return json.dumps({"location": "ä¸Šæµ·", "temperature": "10", "unit": unit})
+    elif "åŒ—äº¬" in location.lower():
+        return json.dumps({"location": "åŒ—äº¬", "temperature": "15", "unit": unit})
+    elif "å¹¿å·" in location.lower():
+        return json.dumps({"location": "å¹¿å·", "temperature": "17", "unit": unit})
     else:
         return json.dumps({"location": location, "temperature": "unknown"})
 
 def get_contract_info(exchange_code, clearing_code, contract_code):
-    # Á¬½Óµ½ SQL Server Êı¾İ¿â
+    # è¿æ¥åˆ° SQL Server æ•°æ®åº“
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.200.57;DATABASE=CMEClearDB;UID=sa;PWD=123456')
     
-    # ¹¹½¨²éÑ¯Óï¾ä
+    # æ„å»ºæŸ¥è¯¢è¯­å¥
     query = f"SELECT * FROM TContract WHERE MQMExchangeCode like '%{exchange_code}%' AND ClearProductCode like '%{clearing_code}%' AND MMY like '%{contract_code}%'"
     
-    # ·µ»ØºÏÔ¼ĞÅÏ¢
-    # Ö´ĞĞ²éÑ¯²¢»ñÈ¡½á¹û
+    # è¿”å›åˆçº¦ä¿¡æ¯
+    # æ‰§è¡ŒæŸ¥è¯¢å¹¶è·å–ç»“æœ
     cursor = conn.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
     
-    # ¹Ø±ÕÓÎ±êºÍÊı¾İ¿âÁ¬½Ó
+    # å…³é—­æ¸¸æ ‡å’Œæ•°æ®åº“è¿æ¥
     cursor.close()
     conn.close()
     
-    # ½«½á¹ûÆ´½Ó³É×Ö·û´®¸ñÊ½
+    # å°†ç»“æœæ‹¼æ¥æˆå­—ç¬¦ä¸²æ ¼å¼
     result_string = ""
     for row in rows:
-        contract_info_string = f"½»Ò×Ëù´úÂë£º{row[1]}£¬ÇåËã´úÂë£º{row[2]}£¬ºÏÔ¼ÈÕÆÚ£º{row[4]}£¬²úÆ·ÀàĞÍ£º{row[5]}£¬×îºó½»Ò×ÈÕ£º {str(row[6])}£¬¿´ÕÇ¿´µø£º{row[8]}£¬ĞĞÈ¨¼Û£º{row[9]}\n"
+        contract_info_string = f"äº¤æ˜“æ‰€ä»£ç ï¼š{row[1]}ï¼Œæ¸…ç®—ä»£ç ï¼š{row[2]}ï¼Œåˆçº¦æ—¥æœŸï¼š{row[4]}ï¼Œäº§å“ç±»å‹ï¼š{row[5]}ï¼Œæœ€åäº¤æ˜“æ—¥ï¼š {str(row[6])}ï¼Œçœ‹æ¶¨çœ‹è·Œï¼š{row[8]}ï¼Œè¡Œæƒä»·ï¼š{row[9]}\n"
         result_string += contract_info_string
     
     return result_string

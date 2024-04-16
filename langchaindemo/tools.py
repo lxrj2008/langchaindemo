@@ -1,18 +1,18 @@
-# coding=gbk
+
 tools = [
         {
             "type": "function",
             "function": {
                 "name": "get_current_weather",
-                "description": "»ñÈ¡Ö¸¶¨µØÇøµÄÌìÆøÇé¿ö",
+                "description": "è·å–æŒ‡å®šåœ°åŒºçš„å¤©æ°”æƒ…å†µ",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "location": {
                             "type": "string",
-                            "description": "ÌØ¶¨µÄ³ÇÊĞ, ±ÈÈçÉÏº£¡¢±±¾©¡¢¹ãÖİ",
+                            "description": "ç‰¹å®šçš„åŸå¸‚, æ¯”å¦‚ä¸Šæµ·ã€åŒ—äº¬ã€å¹¿å·",
                         },
-                        "unit": {"type": "string", "enum": ["ÉãÊÏ¶È£¨¡æ£©", "»ªÊÏ¶È£¨¨H£©"]},
+                        "unit": {"type": "string", "enum": ["æ‘„æ°åº¦ï¼ˆâ„ƒï¼‰", "åæ°åº¦ï¼ˆâ„‰ï¼‰"]},
                     },
                     "required": ["location"],
                 },
@@ -22,21 +22,21 @@ tools = [
     "type": "function",
     "function": {
         "name": "get_contract_info",
-        "description": "ÄãÊÇÒ»¸ö×¨ÒµµÄºÏÔ¼¡¢²úÆ·²éÖúÊÖ£¬ÄÜ¹»Îª¿Í»§²éÑ¯ÌØ¶¨µÄ²úÆ·»òºÏÔ¼ĞÅÏ¢",
+        "description": "ä½ æ˜¯ä¸€ä¸ªä¸“ä¸šçš„åˆçº¦ã€äº§å“æŸ¥åŠ©æ‰‹ï¼Œèƒ½å¤Ÿä¸ºå®¢æˆ·æŸ¥è¯¢ç‰¹å®šçš„äº§å“æˆ–åˆçº¦ä¿¡æ¯",
         "parameters": {
             "type": "object",
             "properties": {
                 "exchange_code": {
                     "type": "string",
-                    "description": "½»Ò×Ëù´úÂë,±ÈÈçCME"
+                    "description": "äº¤æ˜“æ‰€ä»£ç ,æ¯”å¦‚CME"
                 },
                 "clearing_code": {
                     "type": "string",
-                    "description": "ÇåËã´úÂë£¬±ÈÈçMNQ"
+                    "description": "æ¸…ç®—ä»£ç ï¼Œæ¯”å¦‚MNQ"
                 },
                 "contract_code": {
                     "type": "string",
-                    "description": "ºÏÔ¼ÈÕÆÚ£¬±ÈÈç20230900"
+                    "description": "åˆçº¦æ—¥æœŸï¼Œæ¯”å¦‚20230900"
                 }
             },
             "required": ["exchange_code", "clearing_code", "contract_code"]

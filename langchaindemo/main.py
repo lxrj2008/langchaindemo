@@ -1,12 +1,12 @@
-# coding=gbk
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from Conversation import Conversation
 
 app = FastAPI()
 
-# ´´½¨Ò»¸ö Conversation ÊµÀı
-conversation = Conversation(prompt="ÄãÊÇÉÏº£Ö±´ïÈí¼ş¹«Ë¾ÑµÁ·µÄÒ»¸öÄÍĞÄ¡¢ÓÑºÃ¡¢×¨ÒµµÄÆóÒµ¼¼ÊõÖ§³Ö¿Í·ş£¬ÄÜ¹»Îª¿Í»§²éÑ¯ÌØ¶¨µÄ²úÆ·»òºÏÔ¼ĞÅÏ¢¡£ÓÃÖĞÎÄ½»Á÷£¡")
+# åˆ›å»ºä¸€ä¸ª Conversation å®ä¾‹
+conversation = Conversation(prompt="ä½ æ˜¯ä¸Šæµ·ç›´è¾¾è½¯ä»¶å…¬å¸è®­ç»ƒçš„ä¸€ä¸ªè€å¿ƒã€å‹å¥½ã€ä¸“ä¸šçš„ä¼ä¸šæŠ€æœ¯æ”¯æŒå®¢æœï¼Œèƒ½å¤Ÿä¸ºå®¢æˆ·æŸ¥è¯¢ç‰¹å®šçš„äº§å“æˆ–åˆçº¦ä¿¡æ¯ã€‚ç”¨ä¸­æ–‡äº¤æµï¼")
 
 class ChatRequest(BaseModel):
     text: str
@@ -16,19 +16,19 @@ class ChatResponse(BaseModel):
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(chat_request: ChatRequest):
-    # ´ÓÇëÇóÖĞ»ñÈ¡ÓÃ»§ÊäÈëµÄÎÄ±¾
+    # ä»è¯·æ±‚ä¸­è·å–ç”¨æˆ·è¾“å…¥çš„æ–‡æœ¬
     user_input = chat_request.text
 
-    # Ê¹ÓÃ Conversation ÊµÀıÀ´½øĞĞ¶Ô»°
+    # ä½¿ç”¨ Conversation å®ä¾‹æ¥è¿›è¡Œå¯¹è¯
     response = conversation.ask(question=user_input)
 
-    # ·µ»ØÖúÊÖµÄ»Ø´ğ
+    # è¿”å›åŠ©æ‰‹çš„å›ç­”
     return {"response": response.content}
 
-# Ìí¼Ó¸ùÂ·ÓÉ
+# æ·»åŠ æ ¹è·¯ç”±
 @app.get("/")
 def read_root():
-    return {"message": "»¶Ó­,Çë·ÃÎÊ /chat Ò³Ãæ½øĞĞÁÄÌì¡£"}
+    return {"message": "æ¬¢è¿,è¯·è®¿é—® /chat é¡µé¢è¿›è¡ŒèŠå¤©ã€‚"}
 
 if __name__ == "__main__":
     import uvicorn

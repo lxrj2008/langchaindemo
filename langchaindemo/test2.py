@@ -1,9 +1,9 @@
-# coding=gbk
+
 import os
 from openai import OpenAI
 from openai import AzureOpenAI
 
-os.environ["AZURE_OPENAI_KEY"] = 'd58136d46efe4cedb8e9c33d682d518f'#ÌîĞ´×Ô¼ºµÄAzure Api_key
+os.environ["AZURE_OPENAI_KEY"] = 'd58136d46efe4cedb8e9c33d682d518f'#å¡«å†™è‡ªå·±çš„Azure Api_key
 client = AzureOpenAI(
     azure_endpoint = "https://zdopenai.openai.azure.com/", 
     api_key=os.environ.get("AZURE_OPENAI_KEY"),
@@ -13,7 +13,7 @@ stream = client.chat.completions.create(
     model="gpt-4",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "Ö¤Ã÷±Ø´ï¸ñÀ­Ë¹¶¨Àí"}
+        {"role": "user", "content": "è¯æ˜å¿…è¾¾æ ¼æ‹‰æ–¯å®šç†"}
     ],
     stream=True,
 )
