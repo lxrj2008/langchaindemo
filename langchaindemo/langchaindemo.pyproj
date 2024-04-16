@@ -23,8 +23,15 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="test.py" />
+    <Compile Include="Conversation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="embedding.py" />
+    <Compile Include="main.py" />
     <Compile Include="test2.py" />
+    <Compile Include="tools.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|VisualStudio|zdchat" />
