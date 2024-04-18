@@ -8,12 +8,10 @@ import pyodbc
 
 class Conversation:
     def __init__(self, prompt):
-        os.environ["AZURE_OPENAI_KEY"] = 'd58136d46efe4cedb8e9c33d682d518f'
-
-        self.client = AzureOpenAI(
-        azure_endpoint = "https://zdopenai.openai.azure.com/", 
-        api_key=os.getenv("AZURE_OPENAI_KEY"),  
-        api_version="2024-02-15-preview")
+        os.environ["AZURE_OPENAI_API_KEY"] = 'd58136d46efe4cedb8e9c33d682d518f'
+        os.environ["OPENAI_API_VERSION"] = "2024-02-15-preview"
+        os.environ["AZURE_OPENAI_ENDPOINT"] = "https://zdopenai.openai.azure.com/"
+        self.client = AzureOpenAI()
         self.prompt = prompt
         self.messages = []
         self.messages.append({"role": "system", "content": self.prompt})
@@ -21,7 +19,7 @@ class Conversation:
 
     def ask(self, question):
         try:
-            messages=[{"role": "system", "content": "你是上海直达软件公司训练的一个耐心、友好、专业的企业技术支持客服，能够为客户查询特定的产品或合约信息.用中文交流！"}]
+            messages=[{"role": "system", "content": "你是上海直达软件公司训练的一个礼貌、耐心、友好、专业的企业技术支持客服，能够为客户查询产品或合约信息。"}]
             messages.append({"role": "user", "content": question})
             #self.messages.append({"role": "user", "content": question})
             response = self.client.chat.completions.create(
@@ -36,22 +34,17 @@ class Conversation:
             if tool_calls:
                 #self.messages.append(response_message)
                 messages.append(response_message)
-                available_functions = {
-                "get_current_weather": get_current_weather,
-                "get_contract_info": get_contract_info,}
                 for tool_call in tool_calls:
                     function_name = tool_call.function.name
+                    function_result = {}
+                    args = tool_call.function.arguments
                     if function_name == "get_contract_info":
-                        function_to_call = available_functions[function_name]
-                        function_args = json.loads(tool_call.function.arguments)
-                        function_response = function_to_call(exchange_code=function_args.get("exchange_code"),clearing_code=function_args.get("clearing_code"),contract_code=function_args.get("contract_code"))
+                        
+                        function_response = get_contract_info(**json.loads(args))
+                        
                     else:
-                        function_to_call = available_functions[function_name]
-                        function_args = json.loads(tool_call.function.arguments)
-                        function_response = function_to_call(
-                            location=function_args.get("location"),
-                            unit=function_args.get("unit"),
-                        )
+                        function_response = get_current_weather(**json.loads(args))
+                        
                     #self.messages.append(
                     #   {
                     #       "tool_call_id": tool_call.id,
@@ -65,13 +58,14 @@ class Conversation:
                            "tool_call_id": tool_call.id,
                             "role": "tool",
                             "name": function_name,
-                            "content": f"{function_response},以json格式输出",
+                            "content": f"{function_response}",
+                            #"content": f"{function_response},以json格式输出",
                        }
                     )
                 second_response = self.client.chat.completions.create(
                 model="gpt-4",
                 messages=messages,
-                response_format={ "type": "json_object" },
+                #response_format={ "type": "json_object" },
                 temperature =0.5)
                 response_message = second_response.choices[0].message
                 print("Bot:", response_message.content)
@@ -123,3 +117,4 @@ def get_contract_info(exchange_code, clearing_code, contract_code):
         result_string += contract_info_string
     
     return result_string
+

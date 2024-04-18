@@ -27,6 +27,7 @@ from langchain_community.document_loaders.pdf import PyPDFDirectoryLoader
 # load PDF files from directory
 def load_pdf_from_dir(directory_path):
     loader = PyPDFDirectoryLoader(directory_path)
+    print(loader)
     data = loader.load()
     return data
  
@@ -52,6 +53,7 @@ def load_word_from_dir(directory_path):
         if filename.endswith(".doc") or filename.endswith(".docx"):
             # langchain自带功能，加载word文档
             loader = UnstructuredWordDocumentLoader(f'{directory_path}/{filename}')
+            print(loader)
             data.append(loader.load())
     return data
  
@@ -129,7 +131,7 @@ def load_all_from_dir(directory_path, glob, show_progress=False, use_multithread
     return data
  
 if __name__ == '__main__':
-    #res = load_all_from_dir("./knowledge_base/","*")
-    res = load_txt_from_dir("knowledge_base/")
+    res = load_all_from_dir("knowledge_base/","*")
+    #res = load_txt_from_dir("knowledge_base/")
     print(res)
  

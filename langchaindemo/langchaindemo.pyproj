@@ -23,6 +23,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="chinese_recursive_text_splitter.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="cli.py">
       <SubType>Code</SubType>
     </Compile>
@@ -34,7 +37,7 @@
     </Compile>
     <Compile Include="embedding.py" />
     <Compile Include="main.py" />
-    <Compile Include="test2.py" />
+    <Compile Include="streamlit.py" />
     <Compile Include="tools.py">
       <SubType>Code</SubType>
     </Compile>
