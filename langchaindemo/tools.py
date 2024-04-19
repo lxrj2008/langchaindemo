@@ -4,7 +4,7 @@ tools = [
             "type": "function",
             "function": {
                 "name": "get_current_weather",
-                "description": "获取指定地区的天气情况",
+                "description": "根据城市名称获取对应的天气信息",
                 "parameters": {
                     "type": "object",
                     "properties": {
@@ -22,7 +22,7 @@ tools = [
     "type": "function",
     "function": {
         "name": "get_contract_info",
-        "description": "你是一个专业的合约、产品查助手，能够为客户查询特定的产品或合约信息",
+        "description": "根据交易所代码、清算代码和合约日期查询对应的合约或产品信息",
         "parameters": {
             "type": "object",
             "properties": {

@@ -19,7 +19,7 @@ class Conversation:
 
     def ask(self, question):
         try:
-            messages=[{"role": "system", "content": "你是上海直达软件公司训练的一个礼貌、耐心、友好、专业的企业技术支持客服，能够为客户查询产品或合约信息。"}]
+            messages=[{"role": "system", "content": "你是上海直达软件公司训练的一个礼貌、耐心、友好、专业的企业技术支持客服，能够为客户查询产品或合约信息。不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要信息"}]
             messages.append({"role": "user", "content": question})
             #self.messages.append({"role": "user", "content": question})
             response = self.client.chat.completions.create(
