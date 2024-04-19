@@ -1,6 +1,5 @@
 
 import os
-from openai import OpenAI
 from openai import AzureOpenAI
 
 os.environ["AZURE_OPENAI_KEY"] = 'd58136d46efe4cedb8e9c33d682d518f'#填写自己的Azure Api_key

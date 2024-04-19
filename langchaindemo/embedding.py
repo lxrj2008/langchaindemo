@@ -50,20 +50,20 @@ def get_documents(index="faiss_index", query="", limit=3):
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
     docs = db.similarity_search_with_score(query)
     docs_page_content = " ".join([d[0].page_content for d in docs])
-    print(f"docs_page_content：{docs}")
+    #print(f"docs_page_content：{docs}")
     return docs_page_content
 
 if __name__ == '__main__':
-    #create_and_save_faiss_index()
-    index="faiss_index"
-    query = "你可以python写一个下载页面的示例吗？"
-    txts = get_documents(index,query,3)
-    client = AzureOpenAI()
-    completion = client.chat.completions.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": f"你是个礼貌且聪明的助理，可以根据给定文档回答问题。通过搜索文档：{txts}，回答以下问题：{query}。如果你觉得自己没有足够的信息来回答这个问题，可以根据你的经验来回答，回答结束时，请一定要说谢谢你的提问！"},
-        {"role": "user", "content": f"{query}"}
-    ])
+    create_and_save_faiss_index()
+    #index="faiss_index"
+    #query = "你可以python写一个下载页面的示例吗？"
+    #txts = get_documents(index,query,3)
+    #client = AzureOpenAI()
+    #completion = client.chat.completions.create(
+    #model="gpt-4",
+    #messages=[
+    #    {"role": "system", "content": f"你是个礼貌且聪明的助理，可以根据给定文档回答问题。通过搜索文档：{txts}，回答以下问题：{query}。如果你觉得自己没有足够的信息来回答这个问题，可以根据你的经验来回答，回答结束时，请一定要说谢谢你的提问！"},
+    #    {"role": "user", "content": f"{query}"}
+    #])
     
-print(completion.choices[0].message)
+    #print(completion.choices[0].message)

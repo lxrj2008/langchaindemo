@@ -6,7 +6,7 @@ from Conversation import Conversation
 app = FastAPI()
 
 # 创建一个 Conversation 实例
-conversation = Conversation(prompt="你是上海直达软件公司训练的一个耐心、友好、专业的企业技术支持客服，能够为客户查询特定的产品或合约信息。用中文交流！")
+conversation = Conversation()
 
 class ChatRequest(BaseModel):
     text: str

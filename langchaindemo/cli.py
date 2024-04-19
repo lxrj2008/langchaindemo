@@ -2,11 +2,11 @@
 from Conversation import Conversation
 
 def chat_loop():
-    conversation = Conversation(prompt="你是上海直达软件公司训练的一个耐心、友好、专业的企业技术支持客服，能够为客户查询特定的产品或合约信息。")
+    conversation = Conversation()
     while True:
-        user_input = input("You: ")
+        user_input = input("\nYou: ")
         res=conversation.ask(question=f"{user_input}")
-
+        print("\nBot：", res.content)
 
 
 # Start the chat loop
