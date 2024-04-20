@@ -19,7 +19,7 @@ class Conversation:
         try:
             messages=[
                       {"role": "system", "content": "你是上海直达软件公司训练的一个礼貌、耐心、友好、专业的企业技术支持客服，能够为客户查询产品或合约信息。"},
-                      {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要信息。"},
+                      {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要参数信息。"},
                       {"role":"system","content":"Only use the functions you have been provided with"}
                      ]
             messages.append({"role": "user", "content": question})
@@ -28,7 +28,7 @@ class Conversation:
                 messages=messages,
                 tools=self.tools,
                 tool_choice="auto",
-                temperature=0.5,
+                temperature=0.3,
             )
             response_message = response.choices[0].message
             tool_calls = response_message.tool_calls
@@ -52,7 +52,7 @@ class Conversation:
                             "tool_call_id": tool_call.id,
                             "role": "tool",
                             "name": function_name,
-                            "content": f"你是个礼貌且聪明的助理，可以根据给定文档回答问题。通过搜索文档：{function_response}，回答以下问题：{question}。如果你觉得提供内容信息不足以回答这个问题，可以根据你的经验来回答",
+                            "content": f"你是个礼貌且聪明的助理，可以根据知识库回答问题。通过搜索知识库：{function_response}，回答以下问题：{question}。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答",
                             #"content": f"{function_response},以json格式输出",
                        }
                     )
@@ -60,7 +60,7 @@ class Conversation:
                 model="gpt-4",
                 messages=messages,
                 #response_format={ "type": "json_object" },
-                temperature =0.5)
+                temperature =0.3)
                 response_message = second_response.choices[0].message
                 #print("Bot：", response_message.content)
             else:
