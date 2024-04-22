@@ -102,6 +102,6 @@ def get_contract_info(exchange_code, clearing_code, contract_code,product_type):
 def answer_question(question):
     index="faiss_index"
     query = question
-    txts =embedding.get_documents(index,query,3)
+    txts =embedding.get_documents(index,query)
     return txts
 

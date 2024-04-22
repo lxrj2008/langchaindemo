@@ -44,7 +44,7 @@ def create_and_save_faiss_index(path='knowledge_base/'):
     loaderdoc = documentloader.load_word_from_dir(path)
     save_documents(loaderdoc)
 
-def get_documents(index="faiss_index", query="", limit=3):
+def get_documents(index="faiss_index", query=""):
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
     docs = db.similarity_search_with_score(query)
     docs_page_content = " ".join([d[0].page_content for d in docs])
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     #create_and_save_faiss_index()
     index="faiss_index"
     query = "请介绍下开户流程"
-    txts = get_documents(index,query,3)
+    txts = get_documents(index,query)
     client = AzureOpenAI()
     completion = client.chat.completions.create(
     model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
