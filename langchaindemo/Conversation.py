@@ -1,15 +1,11 @@
 
 from openai import AzureOpenAI
-import os
-import cfg
-import json
-import pyodbc
-import embedding
-import copy
+import os,json,pyodbc,copy
+import cfg,embedding
 
-os.environ["AZURE_OPENAI_API_KEY"] = 'd58136d46efe4cedb8e9c33d682d518f'
-os.environ["OPENAI_API_VERSION"] = "2024-02-15-preview"
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://zdopenai.openai.azure.com/"
+os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
+os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
+os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_base_url"]
 
 class Conversation:
     def __init__(self,username=None):
@@ -24,7 +20,7 @@ class Conversation:
             
             self.messages.append({"role": "user", "content": question})
             response = self.client.chat.completions.create(
-                model="gpt-4",
+                model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
                 tools=self.tools,
                 tool_choice="auto",

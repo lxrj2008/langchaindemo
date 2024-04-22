@@ -1,6 +1,8 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI
 from pydantic import BaseModel
 from Conversation import Conversation  
+from cfg import hostinfo
+import uvicorn
 
 app = FastAPI()
 
@@ -23,7 +25,6 @@ async def chat(chat_request: ChatRequest):
     if username not in conversation_manager:
         conversation_manager[username] = Conversation(username)
 
-    # 使用 Conversation 实例来进行对话，并传递用户名参数
     conversation = conversation_manager[username]
     response_message = conversation.ask(user_input)
 
@@ -36,5 +37,5 @@ async def read_root():
     return {"message": "Welcome, please visit /chat page to chat."}
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="192.168.200.57", port=8000)
+    
+    uvicorn.run(app, host=hostinfo["hostname"], port=int(hostinfo["port"]))

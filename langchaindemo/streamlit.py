@@ -1,18 +1,17 @@
 
 import os
 from openai import AzureOpenAI
+import cfg
 
-os.environ["AZURE_OPENAI_KEY"] = 'd58136d46efe4cedb8e9c33d682d518f'#填写自己的Azure Api_key
-client = AzureOpenAI(
-    azure_endpoint = "https://zdopenai.openai.azure.com/", 
-    api_key=os.environ.get("AZURE_OPENAI_KEY"),
-    api_version="2024-02-15-preview"
-)
+os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
+os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
+os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_base_url"]
+client = AzureOpenAI()
 stream = client.chat.completions.create(
     model="gpt-4",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "证明必达格拉斯定理"}
+        {"role": "user", "content": "你好"}
     ],
     stream=True,
 )

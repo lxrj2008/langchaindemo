@@ -53,3 +53,16 @@ SystemPrompt = [
                     {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要参数信息。"},
                     {"role":"system","content":"Only use the functions you have been provided with"}
                ]
+
+
+ONLINE_LLM_MODEL = {
+    "AzureOpenAI": {
+        "model_name": "gpt-4",
+        "api_base_url": "https://zdopenai.openai.azure.com/",
+        "api_version":"2024-02-15-preview",
+        "api_key": "d58136d46efe4cedb8e9c33d682d518f",
+        "openai_proxy": "",
+    },
+}
+
+hostinfo={"hostname":"192.168.200.57","port":"8000"}
