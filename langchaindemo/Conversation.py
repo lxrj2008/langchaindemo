@@ -49,7 +49,7 @@ class Conversation:
                             "tool_call_id": tool_call.id,
                             "role": "tool",
                             "name": function_name,
-                            "content": f"你是上海直达软件有限公司开发的智能机器人小达达，你非常专业，可以根据上下文回答问题。请根据上下文：{function_response}，回答以下问题：{question}。如果你觉得上下文内容信息不足以回答这个问题，你可以回复不知道或者根据你的经验来回答",
+                            "content": f"你是上海直达软件有限公司开发的智能机器人小达达，你很有礼貌且很聪明，可以根据知识库回答问题。通过搜索知识库：{function_response}，回答以下问题：{question}。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答",
                             #"content": f"{function_response},以json格式输出",
                        }
                     )
