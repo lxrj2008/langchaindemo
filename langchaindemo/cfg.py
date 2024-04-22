@@ -66,3 +66,5 @@ ONLINE_LLM_MODEL = {
 }
 
 hostinfo={"hostname":"192.168.200.57","port":"8000"}
+
+CompleteionsPara={"temperature":0.3,"max_tokens":1000}

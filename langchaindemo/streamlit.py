@@ -8,7 +8,7 @@ os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_vers
 os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_base_url"]
 client = AzureOpenAI()
 stream = client.chat.completions.create(
-    model="gpt-4",
+    model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": "你好"}

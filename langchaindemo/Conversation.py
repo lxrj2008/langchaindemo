@@ -24,7 +24,8 @@ class Conversation:
                 messages=self.messages,
                 tools=self.tools,
                 tool_choice="auto",
-                temperature=0.3,
+                temperature=cfg.CompleteionsPara["temperature"],
+                max_tokens=cfg.CompleteionsPara["max_tokens"]
             )
             response_message = response.choices[0].message
             tool_calls = response_message.tool_calls
@@ -53,15 +54,15 @@ class Conversation:
                        }
                     )
                 second_response = self.client.chat.completions.create(
-                model="gpt-4",
+                model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
                 #response_format={ "type": "json_object" },
-                temperature =0.3)
+                stream=cfg.CompleteionsPara["stream"],
+                temperature=cfg.CompleteionsPara["temperature"],
+                max_tokens=cfg.CompleteionsPara["max_tokens"])
                 response_message = second_response.choices[0].message
-                #print("Bot：", response_message.content)
             else:
                 pass
-               #print("Bot：", response_message.content)
             self.messages.append({"role": "assistant", "content": response_message.content})
             return response_message
         except Exception as e:
