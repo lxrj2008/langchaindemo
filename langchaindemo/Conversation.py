@@ -57,7 +57,6 @@ class Conversation:
                 model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
                 #response_format={ "type": "json_object" },
-                stream=cfg.CompleteionsPara["stream"],
                 temperature=cfg.CompleteionsPara["temperature"],
                 max_tokens=cfg.CompleteionsPara["max_tokens"])
                 response_message = second_response.choices[0].message
