@@ -38,7 +38,7 @@
     <Compile Include="embedding.py" />
     <Compile Include="main.py" />
     <Compile Include="streamlit.py" />
-    <Compile Include="tools.py">
+    <Compile Include="cfg.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

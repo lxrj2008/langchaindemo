@@ -1,34 +1,39 @@
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Depends
 from pydantic import BaseModel
-from Conversation import Conversation
+from Conversation import Conversation  
 
 app = FastAPI()
 
-# 创建一个 Conversation 实例
-conversation = Conversation()
-
 class ChatRequest(BaseModel):
     text: str
+    username: str
 
 class ChatResponse(BaseModel):
     response: str
 
-@app.post("/chat", response_model=ChatResponse)
-def chat(chat_request: ChatRequest):
-    # 从请求中获取用户输入的文本
-    user_input = chat_request.text
+conversation_manager = {}
 
-    # 使用 Conversation 实例来进行对话
-    response = conversation.ask(question=user_input)
+@app.post("/chat", response_model=ChatResponse)
+async def chat(chat_request: ChatRequest):
+    # 从请求中获取用户输入的文本和用户名
+    user_input = chat_request.text
+    username = chat_request.username
+
+    # 检查是否已经为该用户名创建了 Conversation 实例，如果没有则创建一个
+    if username not in conversation_manager:
+        conversation_manager[username] = Conversation(username)
+
+    # 使用 Conversation 实例来进行对话，并传递用户名参数
+    conversation = conversation_manager[username]
+    response_message = conversation.ask(user_input)
 
     # 返回助手的回答
-    return {"response": response.content}
+    return {"response": response_message.content}
 
 # 添加根路由
 @app.get("/")
-def read_root():
-    return {"message": "欢迎,请访问 /chat 页面进行聊天。"}
+async def read_root():
+    return {"message": "Welcome, please visit /chat page to chat."}
 
 if __name__ == "__main__":
     import uvicorn
