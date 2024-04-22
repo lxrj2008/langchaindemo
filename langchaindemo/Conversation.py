@@ -13,6 +13,7 @@ class Conversation:
         self.username=username
         self.tools=cfg.tools
         self.messages = copy.deepcopy(cfg.SystemPrompt)
+        self.round=0;
         
 
     def ask(self,question):
@@ -63,12 +64,17 @@ class Conversation:
             else:
                 pass
             self.messages.append({"role": "assistant", "content": response_message.content})
+            self.round += 1
+            if self.round >= cfg.ChatRound:
+                # Reset self.messages to cfg.SystemPrompt
+                self.messages = copy.deepcopy(cfg.SystemPrompt)
+                self.round=0
             return response_message
         except Exception as e:
             print(e)
             return e
 
-        
+
 def get_contract_info(exchange_code, clearing_code, contract_code,product_type):
 
     conn = pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.200.57;DATABASE=CMEClearDB;UID=sa;PWD=123456')
