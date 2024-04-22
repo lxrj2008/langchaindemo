@@ -34,7 +34,7 @@ async def chat(chat_request: ChatRequest):
 # 添加根路由
 @app.get("/")
 async def read_root():
-    return {"message": "Welcome, please visit /chat page to chat."}
+    return {"message": "Welcome, please visit /chat page to chat，HttpMethd post"}
 
 if __name__ == "__main__":
     

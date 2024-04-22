@@ -52,16 +52,16 @@ def get_documents(index="faiss_index", query="", limit=3):
     return docs_page_content
 
 if __name__ == '__main__':
-    create_and_save_faiss_index()
-    #index="faiss_index"
-    #query = "你可以python写一个下载页面的示例吗？"
-    #txts = get_documents(index,query,3)
-    #client = AzureOpenAI()
-    #completion = client.chat.completions.create(
-    #model="gpt-4",
-    #messages=[
-    #    {"role": "system", "content": f"你是个礼貌且聪明的助理，可以根据给定文档回答问题。通过搜索文档：{txts}，回答以下问题：{query}。如果你觉得自己没有足够的信息来回答这个问题，可以根据你的经验来回答，回答结束时，请一定要说谢谢你的提问！"},
-    #    {"role": "user", "content": f"{query}"}
-    #])
+    #create_and_save_faiss_index()
+    index="faiss_index"
+    query = "请介绍下开户流程"
+    txts = get_documents(index,query,3)
+    client = AzureOpenAI()
+    completion = client.chat.completions.create(
+    model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
+    messages=[
+        {"role": "system", "content": f"你是上海直达软件有限公司开发的智能机器人小达达，你很有礼貌且很聪明，可以根据知识库回答问题。通过搜索知识库：{txts}，回答以下问题：{query}。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答"},
+        {"role": "user", "content": f"{query}"}
+    ])
     
-    #print(completion.choices[0].message)
+    print(completion.choices[0].message)
