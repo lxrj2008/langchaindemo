@@ -54,6 +54,7 @@ SystemPrompt = [
                     {"role":"system","content":"Only use the functions you have been provided with"}
                ]
 
+ToolPrompt=f"你是上海直达软件有限公司开发的智能机器人小达达，你很有礼貌且很聪明，可以根据知识库回答问题。通过搜索知识库：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {

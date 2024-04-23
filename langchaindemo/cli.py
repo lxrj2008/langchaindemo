@@ -2,7 +2,7 @@ from Conversation import Conversation
 
 def chat_loop():
     try:
-        conversation = Conversation()
+        conversation = Conversation('device01')
         while True:
             user_input = input("\nYou: ")
             res = conversation.ask(question=f"{user_input}")

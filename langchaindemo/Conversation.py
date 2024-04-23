@@ -2,6 +2,7 @@
 from openai import AzureOpenAI
 import os,json,pyodbc,copy
 import cfg,embedding
+from collections import deque
 
 os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
 os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
@@ -12,13 +13,12 @@ class Conversation:
         self.client = AzureOpenAI()
         self.username=username
         self.tools=cfg.tools
-        self.messages = copy.deepcopy(cfg.SystemPrompt)
+        self.messages = deque(copy.deepcopy(cfg.SystemPrompt))#first in first out queue
         self.round=0;
         
 
     def ask(self,question):
         try:
-            
             self.messages.append({"role": "user", "content": question})
             response = self.client.chat.completions.create(
                 model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
@@ -50,7 +50,7 @@ class Conversation:
                             "tool_call_id": tool_call.id,
                             "role": "tool",
                             "name": function_name,
-                            "content": f"你是上海直达软件有限公司开发的智能机器人小达达，你很有礼貌且很聪明，可以根据知识库回答问题。通过搜索知识库：{function_response}，回答以下问题：{question}。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答",
+                            "content": cfg.ToolPrompt.replace("knowledge", function_response).replace("question", question)
                             #"content": f"{function_response},以json格式输出",
                        }
                     )
@@ -66,9 +66,25 @@ class Conversation:
             self.messages.append({"role": "assistant", "content": response_message.content})
             self.round += 1
             if self.round >= cfg.ChatRound:
-                # Reset self.messages to cfg.SystemPrompt
-                self.messages = copy.deepcopy(cfg.SystemPrompt)
-                self.round=0
+               # 弹出前三个元素并保存
+               first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
+               # 计数器，用于跟踪完成的消息聊天轮数
+               user_count = 0
+               # 遍历队列中的元素
+               while self.messages:
+                   # 获取队列中的下一个元素
+                   msg = self.messages.popleft()
+                   # 如果遇到用户角色消息，则增加计数器
+                   if isinstance(msg, dict) and msg.get("role") == "user":
+                       user_count += 1
+                   # 如果用户角色消息数量达到了2，则停止循环，并且把下一个role等于user的元素加回队列
+                   if user_count == 2:
+                       self.messages.appendleft(msg)
+                       break
+               # 将前三个元素放回队列，并且位置不变
+               for mymsg in reversed(first_three_messages):
+                   self.messages.appendleft(mymsg)
+               self.round=0
             return response_message
         except Exception as e:
             print(e)
