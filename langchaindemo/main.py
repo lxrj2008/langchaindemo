@@ -7,7 +7,7 @@ import uvicorn
 app = FastAPI()
 
 class ChatRequest(BaseModel):
-    text: str
+    question: str
     username: str
 
 class ChatResponse(BaseModel):
@@ -19,7 +19,7 @@ conversation_manager = {}
 async def chat(chat_request: ChatRequest):
     try:
         # 从请求中获取用户输入的文本和用户名
-        user_input = chat_request.text
+        user_input = chat_request.question
         username = chat_request.username
 
         # 检查是否已经为该用户名创建了 Conversation 实例，如果没有则创建一个
