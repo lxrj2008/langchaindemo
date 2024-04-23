@@ -9,7 +9,7 @@ os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_ke
 os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
 os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_base_url"]
 
-logger_info, logger_error = setup_logging()
+logger_info, logger_error,logger_debug = setup_logging()
 
 class Conversation:
     def __init__(self,username=None):
@@ -23,7 +23,8 @@ class Conversation:
     def ask(self,question):
         try:
             self.messages.append({"role": "user", "content": question})
-            logger_info.info(f"username:{self.username},{self.messages}");
+            logger_info.info(f"{self.username} ask:{question}")
+            logger_debug.info(f"{self.username}:{self.messages}");
             response = self.client.chat.completions.create(
                 model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
@@ -41,14 +42,14 @@ class Conversation:
                     function_result = {}
                     args = tool_call.function.arguments
                     if function_name == "get_contract_info":
-                        logger_info.info(f"username:{self.username},functionName:{function_name},args:{args}");
+                        logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
                         function_response = get_contract_info(**json.loads(args))
                     
                     elif function_name=="answer_question" :
-                        logger_info.info(f"username:{self.username},functionName:{function_name},args:{args}");
+                        logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
                         function_response=answer_question(**json.loads(args))
                     else:
-                        logger_info.info(f"username:{self.username},no function selected,but default functionName:{function_name},args:{args}");
+                        logger_debug.info(f"{self.username}:no function selected,but default functionName:{function_name},args:{args}");
                         function_response = answer_question(**json.loads(args))
                         
                     self.messages.append(
@@ -68,11 +69,11 @@ class Conversation:
                 max_tokens=cfg.CompleteionsPara["max_tokens"])
                 response_message = second_response.choices[0].message
             else:
-                logger_info.info(f'username:{self.username},no tools is called')
+                logger_debug.info(f'{self.username}:no tools is called')
             self.messages.append({"role": "assistant", "content": response_message.content})
             self.round += 1
             if self.round >= cfg.ChatRound:
-               logger_info.info(f"username:{self.username},ChatRound:{self.round}");
+               logger_debug.info(f"{self.username}:ChatRound:{self.round}");
                # 弹出前三个元素并保存
                first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
                # 计数器，用于跟踪完成的消息聊天轮数
@@ -92,11 +93,12 @@ class Conversation:
                for mymsg in reversed(first_three_messages):
                    self.messages.appendleft(mymsg)
                self.round=0
-            logger_info.info(f"username:{self.username},{self.messages}");   
+            logger_info.info(f"{self.username} answer:{response_message.content}");   
+            logger_debug.info(f"{self.username}:{self.messages}");
             return response_message
         except Exception as e:
             print(e)
-            logger_error.error(f"username:{self.username},An error occurred: %s", e)
+            logger_error.error(f"{self.username}:An error occurred: %s", e)
             return e
 
 
