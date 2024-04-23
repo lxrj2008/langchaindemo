@@ -3,32 +3,32 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 
 def setup_logging():
-    # ¼ì²é²¢´´½¨ÈÕÖ¾ÎÄ¼ş¼Ğ
+    # æ£€æŸ¥å¹¶åˆ›å»ºæ—¥å¿—æ–‡ä»¶å¤¹
     log_folder = 'syslog'
     if not os.path.exists(log_folder):
         os.makedirs(log_folder)
 
-    # ´´½¨ÈÕÖ¾¼ÇÂ¼Æ÷
+    # åˆ›å»ºæ—¥å¿—è®°å½•å™¨
     logger_info = logging.getLogger('info_logger')
     logger_error = logging.getLogger('error_logger')
     logger_debug = logging.getLogger('error_debug')
 
-    # ÉèÖÃÈÕÖ¾¼¶±ğ
+    # è®¾ç½®æ—¥å¿—çº§åˆ«
     logger_info.setLevel(logging.INFO)
     logger_error.setLevel(logging.ERROR)
     logger_debug.setLevel(logging.DEBUG)
-    # ´´½¨ÎÄ¼ş´¦Àí³ÌĞò£¬ÓÃÓÚ´¦Àí info ¼¶±ğºÍ error ¼¶±ğµÄÈÕÖ¾
+    # åˆ›å»ºæ–‡ä»¶å¤„ç†ç¨‹åºï¼Œç”¨äºå¤„ç† info çº§åˆ«å’Œ error çº§åˆ«çš„æ—¥å¿—
     info_handler = TimedRotatingFileHandler(os.path.join(log_folder, 'info.log'), when='midnight', interval=1, backupCount=30)
     error_handler = TimedRotatingFileHandler(os.path.join(log_folder, 'error.log'), when='midnight', interval=1, backupCount=30)
     debug_handler = TimedRotatingFileHandler(os.path.join(log_folder, 'debug.log'), when='midnight', interval=1, backupCount=30)
 
-    # ÉèÖÃÈÕÖ¾¸ñÊ½
+    # è®¾ç½®æ—¥å¿—æ ¼å¼
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     info_handler.setFormatter(formatter)
     error_handler.setFormatter(formatter)
     debug_handler.setFormatter(formatter)
 
-    # ½«´¦Àí³ÌĞòÌí¼Óµ½ÈÕÖ¾¼ÇÂ¼Æ÷
+    # å°†å¤„ç†ç¨‹åºæ·»åŠ åˆ°æ—¥å¿—è®°å½•å™¨
     logger_info.addHandler(info_handler)
     logger_error.addHandler(error_handler)
     logger_debug.addHandler(debug_handler)
@@ -37,7 +37,7 @@ def setup_logging():
 
 if __name__ == "__main__":
     logger_info, logger_error,logger_debug = setup_logging()
-    # Ê¾ÀıÈÕÖ¾¼ÇÂ¼
+    # ç¤ºä¾‹æ—¥å¿—è®°å½•
     logger_info.info('This is an info message')
     logger_error.error('This is an error message')
     logger_debug.info('This is an debug message')
