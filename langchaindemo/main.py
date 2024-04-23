@@ -33,7 +33,7 @@ async def chat(chat_request: ChatRequest):
         return {"response": response_message.content}
     
     except Exception as e:
-        return {"error": str(e)}
+        return {"An error occurred": str(e)}
 
 
 # 添加根路由

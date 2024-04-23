@@ -37,6 +37,9 @@
     </Compile>
     <Compile Include="embedding.py" />
     <Compile Include="main.py" />
+    <Compile Include="mylogging.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="streamlit.py" />
     <Compile Include="cfg.py">
       <SubType>Code</SubType>
