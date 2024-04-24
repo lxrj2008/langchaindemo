@@ -11,9 +11,11 @@ os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_b
 
 logger_info, logger_error,logger_debug = setup_logging()
 
+client = AzureOpenAI()
+
 class Conversation:
+    
     def __init__(self,username=None):
-        self.client = AzureOpenAI()
         self.username=username
         self.tools=cfg.tools
         self.messages = deque(copy.deepcopy(cfg.SystemPrompt))#first in first out queue
@@ -25,7 +27,7 @@ class Conversation:
             self.messages.append({"role": "user", "content": question})
             logger_info.info(f"{self.username} ask:{question}")
             logger_debug.info(f"{self.username}:{self.messages}");
-            response = self.client.chat.completions.create(
+            response = client.chat.completions.create(
                 model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
                 tools=self.tools,
@@ -61,7 +63,7 @@ class Conversation:
                             #"content": f"{function_response},以json格式输出",
                        }
                     )
-                second_response = self.client.chat.completions.create(
+                second_response = client.chat.completions.create(
                 model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
                 #response_format={ "type": "json_object" },
