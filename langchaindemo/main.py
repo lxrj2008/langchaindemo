@@ -1,14 +1,16 @@
+
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel,constr
 from Conversation import Conversation  
 from cfg import hostinfo
 import uvicorn
+import cfg
 
 app = FastAPI()
 
 class ChatRequest(BaseModel):
-    question: str
-    username: str
+    question: constr(max_length=cfg.wordsnum) 
+    username: str 
 
 class ChatResponse(BaseModel):
     response: str
@@ -21,7 +23,7 @@ async def chat(chat_request: ChatRequest):
         # 从请求中获取用户输入的文本和用户名
         user_input = chat_request.question
         username = chat_request.username
-
+        
         # 检查是否已经为该用户名创建了 Conversation 实例，如果没有则创建一个
         if username not in conversation_manager:
             conversation_manager[username] = Conversation(username)
