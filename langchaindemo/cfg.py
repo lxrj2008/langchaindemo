@@ -49,12 +49,12 @@ tools = [
 }]
 
 SystemPrompt = [
-                    {"role": "system", "content": "你是上海直达软件公司训练的一个礼貌、耐心、友好、专业的企业技术支持客服，能够为客户查询产品或合约信息。"},
+                    {"role": "system", "content": "你是上海直达软件公司训练的智能客服小达达。直达软件专注于服务快速增长的全球金融市场,研发全球期货,期权,股票,牛熊证,认股权,基金,衍生品等交易平台、工具和行业解决方案"},
                     {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要参数信息。"},
                     {"role":"system","content":"Only use the functions you have been provided with"}
                ]
 
-ToolPrompt=f"你是上海直达软件有限公司开发的智能机器人小达达，你很有礼貌且很聪明，可以根据知识库回答问题。通过搜索知识库：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答"
+ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
