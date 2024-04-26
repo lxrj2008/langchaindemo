@@ -1,5 +1,6 @@
 
 from http import client
+from pydoc import doc
 from openai import AzureOpenAI # for calling the OpenAI API
 import os # for getting API token from env variable OPENAI_API_KEY
 import documentloader
@@ -29,34 +30,71 @@ text_splitter = RecursiveCharacterTextSplitter(
             "，|,\s"
         ])
 
-
-def save_documents(documents,index = "faiss_index"):
+def Split_Documents(documents):
     all_chunks = []
     for singledoc in documents:
         chunks = text_splitter.split_documents(singledoc)
         for chunk in chunks:
             all_chunks.append(chunk)  # 将每个文档的 chunks 合并到一个列表中
-    db = FAISS.from_documents(all_chunks, embeddings)
+    return all_chunks
+
+
+def save_documents(documents,index = "faiss_index"):
+    db = FAISS.from_documents(documents, embeddings)
     db.save_local(index)
-    print('DO FAISS IS COMPLETE')
+    print('Init FAISS IS COMPLETE')
     return db
 
 def create_and_save_faiss_index(path='knowledge_base/'):
     
     loaderdoc = documentloader.load_word_from_dir(path)
-    save_documents(loaderdoc)
+    all_chunks=Split_Documents(loaderdoc)
+    save_documents(all_chunks)
 
 def get_documents(index="faiss_index", query=""):
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    print(db)
     docs = db.similarity_search_with_score(query)
     docs_page_content = " ".join([d[0].page_content for d in docs])
     #print(f"docs_page_content：{docs}")
     return docs_page_content
 
+def add_txt_from_dir(index="faiss_index"):
+    db1 = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    
+    loaderdoc=documentloader.load_txt_from_dir("Add_docments/")
+    if len(loaderdoc)==0:
+        return
+    all_chunks=Split_Documents(loaderdoc)
+    db2=FAISS.from_documents(all_chunks, embeddings)
+    db1.merge_from(db2);
+    db1.save_local("faiss_index")
+    print("ADD FAISS IS COMPLETE")
+
+def delfromdb(index="faiss_index",metadata=None):
+    db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    docids=db.index_to_docstore_id
+    vetor=db.docstore._dict
+    deleteIds=[];
+    for key, value in vetor.items():
+         print(key, value.metadata)
+         if(value.metadata['source']==metadata):
+             for key1,value1 in docids.items():
+                 if value1==key:
+                     strkey=str(key1)
+                     deleteIds.append(value1)
+    if(len(deleteIds)>0):
+        db.delete(deleteIds)
+        db.save_local(index)
+    
+
 if __name__ == '__main__':
     #create_and_save_faiss_index()
+    #add_txt_from_dir()
+    #delfromdb('faiss_index','Add_docments//a.txt')
+    
     index="faiss_index"
-    query = "请介绍下开户流程"
+    query = "将复杂的任务拆分为更简单的子任务"
     txts = get_documents(index,query)
     client = AzureOpenAI()
     completion = client.chat.completions.create(
