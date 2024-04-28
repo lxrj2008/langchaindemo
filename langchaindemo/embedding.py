@@ -59,7 +59,7 @@ def get_documents(index="faiss_index", query=""):
     #print(f"docs_page_content：{docs}")
     return docs_page_content
 
-def add_txt_from_dir(index="faiss_index"):
+def add_txt_from_dir_bymerge(index="faiss_index"):
     db1 = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
     
     loaderdoc=documentloader.load_txt_from_dir("Add_docments/")
@@ -68,7 +68,7 @@ def add_txt_from_dir(index="faiss_index"):
     all_chunks=Split_Documents(loaderdoc)
     db2=FAISS.from_documents(all_chunks, embeddings)
     db1.merge_from(db2);
-    db1.save_local("faiss_index")
+    db1.save_local(index)
     print("ADD FAISS IS COMPLETE")
 
 def delfromdb(index="faiss_index",metadata=None):
@@ -86,15 +86,50 @@ def delfromdb(index="faiss_index",metadata=None):
     if(len(deleteIds)>0):
         db.delete(deleteIds)
         db.save_local(index)
+
+def add_doc_from_dir(index="faiss_index"):
+    
+    db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    loaderdoc=documentloader.load_word_from_dir("Add_docments/")
+    if len(loaderdoc)==0:
+        return
+    all_chunks=Split_Documents(loaderdoc)
+    db.add_documents(all_chunks)
+    db.save_local(index)
+    print("ADD FAISS IS COMPLETE")
+
+def add_txt_from_dir(index="faiss_index"):
+    db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    
+    loaderdoc=documentloader.load_txt_from_dir("Add_docments/")
+    if len(loaderdoc)==0:
+        return
+    all_chunks=Split_Documents(loaderdoc)
+    db.add_documents(all_chunks)
+    db.save_local(index)
+    print("ADD FAISS IS COMPLETE")
+
+def add_csv_from_dir(index="faiss_index"):
+    db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    
+    loaderdoc=documentloader.load_csv_from_dir("Add_docments/")
+    if len(loaderdoc)==0:
+        return
+    all_chunks=Split_Documents(loaderdoc)
+    db.add_documents(all_chunks)
+    db.save_local(index)
+    print("ADD FAISS IS COMPLETE")
     
 
 if __name__ == '__main__':
     #create_and_save_faiss_index()
+    #add_csv_from_dir()
     #add_txt_from_dir()
-    #delfromdb('faiss_index','Add_docments//a.txt')
+    #add_doc_from_dir()
+    #delfromdb('faiss_index','Add_docments//b.txt')
     
     index="faiss_index"
-    query = "将复杂的任务拆分为更简单的子任务"
+    query = "美精铜看跌2404 320"
     txts = get_documents(index,query)
     client = AzureOpenAI()
     completion = client.chat.completions.create(
