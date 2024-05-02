@@ -53,7 +53,7 @@ def create_and_save_faiss_index(path='knowledge_base/'):
 
 def get_documents(index="faiss_index", query=""):
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
-    print(db)
+    #print(db)
     docs = db.similarity_search_with_score(query)
     docs_page_content = " ".join([d[0].page_content for d in docs])
     #print(f"docs_page_content：{docs}")
