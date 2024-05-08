@@ -29,6 +29,9 @@
     <Compile Include="cli.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="cli_post.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="conversation.py">
       <SubType>Code</SubType>
     </Compile>
@@ -38,6 +41,9 @@
     <Compile Include="embedding.py" />
     <Compile Include="main.py" />
     <Compile Include="mylogging.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NoStream.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="streamlit.py" />
