@@ -28,3 +28,10 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 *.log
+build
+dist
+__pycache__
+faiss_index
+knowledge_base
+Add_docments
+syslog
