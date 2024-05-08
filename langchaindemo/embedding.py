@@ -8,6 +8,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import AzureOpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 import cfg
+from datetime import datetime
+
 
 
 
@@ -128,15 +130,22 @@ if __name__ == '__main__':
     #add_doc_from_dir()
     #delfromdb('faiss_index','Add_docments//b.txt')
     
-    index="faiss_index"
-    query = "美精铜看跌2404 320"
-    txts = get_documents(index,query)
-    client = AzureOpenAI()
-    completion = client.chat.completions.create(
-    model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
-    messages=[
-        {"role": "system", "content": f"你是上海直达软件有限公司开发的智能机器人小达达，你很有礼貌且很聪明，可以根据知识库回答问题。通过搜索知识库：{txts}，回答以下问题：{query}。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答"},
-        {"role": "user", "content": f"{query}"}
-    ])
-    
-    print(completion.choices[0].message)
+    while True:
+        index = "faiss_index"
+        query = input("You: ")  # 用户输入问题
+        if query.lower() in ["exit", "quit", "bye"]:
+            print("再见！")
+            break  # 如果用户输入 exit、quit 或 bye，则退出循环
+        current_time = datetime.now().strftime("%H:%M:%S")  # 获取当前系统时间
+        print(f"[{current_time}] you: {query}")  # 打印用户输入及时间
+        txts = get_documents(index, query)  # 获取文档列表，暂时为空列表
+        client = AzureOpenAI()
+        completion = client.chat.completions.create(
+            model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
+            messages=[
+                {"role": "system", "content": f"你是上海直达软件有限公司开发的智能机器人小达达，你很有礼貌且很聪明，可以根据知识库回答问题。通过搜索知识库：{txts}，回答以下问题：{query}。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答"},
+                {"role": "user", "content": query}
+            ]
+        )
+        current_time = datetime.now().strftime("%H:%M:%S")  # 获取当前系统时间
+        print(f"[{current_time}] Bot: {completion.choices[0].message.content}")  # 打印 AI 回答及时间
