@@ -9,8 +9,8 @@ from langchain_openai import AzureOpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 import cfg
 from datetime import datetime
-
-
+import time
+from mylogging import setup_logging
 
 
 # Set up environment variables
@@ -31,6 +31,8 @@ text_splitter = RecursiveCharacterTextSplitter(
             "；|;\s",
             "，|,\s"
         ])
+
+logger_info, logger_error,logger_debug = setup_logging()
 
 def Split_Documents(documents):
     all_chunks = []
@@ -54,11 +56,15 @@ def create_and_save_faiss_index(path='knowledge_base/'):
     save_documents(all_chunks)
 
 def get_documents(index="faiss_index", query=""):
+    start_time = time.time()
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
     #print(db)
     docs = db.similarity_search_with_score(query)
     docs_page_content = " ".join([d[0].page_content for d in docs])
     #print(f"docs_page_content：{docs}")
+    end_time = time.time()  # 记录结束时间
+    elapsed_time = end_time - start_time  # 计算耗时
+    logger_debug.info(f'搜索嵌知识库耗时：{elapsed_time}秒')
     return docs_page_content
 
 def add_txt_from_dir_bymerge(index="faiss_index"):
