@@ -21,7 +21,7 @@ os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_b
 #块大小：800 个令牌
 #块重叠：400 个令牌
 #嵌入模型：text-embedding-3-large256 维
-embeddings = AzureOpenAIEmbeddings(model="text-embedding-3-large")
+embeddings = AzureOpenAIEmbeddings(model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["embedding"])
 text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=250, chunk_overlap=50, separators=[
             "\n\n",

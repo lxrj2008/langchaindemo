@@ -34,7 +34,7 @@ tools = [
     "type": "function",
     "function": {
         "name": "answer_question",
-        "description": "回答用户提出的除合约查询以外的其他的问题或闲聊。",
+        "description": "回答工具{get_contract_info}以外的其他问题。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -54,15 +54,16 @@ SystemPrompt = [
                     {"role":"system","content":"Only use the functions you have been provided with"}
                ]
 
-ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，可以根据你的经验来回答"
+ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，请回答不知道并且表明你的专长"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
         "model_name": "gpt-4",
         "api_base_url": "https://zdopenai.openai.azure.com/",
         "api_version":"2024-02-15-preview",
-        "api_key": "d58136d46efe4cedb8e9c33d682d518f",
+        "api_key": "cad46fc2f64e4a7abd4b3b2577f7cbf4",
         "openai_proxy": "",
+        "embedding":"text-embedding-3-large"
     },
 }
 
