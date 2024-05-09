@@ -58,14 +58,23 @@ ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[questio
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
-        "model_name": "gpt-4",
-        "api_base_url": "https://zdopenai.openai.azure.com/",
+        "model_name": "gpt-35-turbo",
+        "api_base_url": "https://zdopenai2.openai.azure.com/",
         "api_version":"2024-02-15-preview",
-        "api_key": "cad46fc2f64e4a7abd4b3b2577f7cbf4",
+        "api_key": "d4d9c0e614be43da919c5695a818dc41",
         "openai_proxy": "",
-        "embedding":"text-embedding-3-large"
+        "embedding":"text-embedding-ada-002"
     },
 }
+
+SimilaritySearchCfg={
+    "top_k":3,
+    "fetch_k":20
+    }
+TextSplitterCfg={
+    "chunksize":250,
+    "overlap":50
+    }
 
 hostinfo={"hostname":"192.168.200.57","port":"8000"}
 

@@ -12,18 +12,18 @@ from datetime import datetime
 import time
 from mylogging import setup_logging
 
+chunksize=cfg.TextSplitterCfg["chunksize"]
+chunkoverlap=cfg.TextSplitterCfg["overlap"]
 
 # Set up environment variables
 os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
 os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
 os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_base_url"]
 
-#块大小：800 个令牌
-#块重叠：400 个令牌
-#嵌入模型：text-embedding-3-large256 维
+
 embeddings = AzureOpenAIEmbeddings(model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["embedding"])
 text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=250, chunk_overlap=50, separators=[
+        chunk_size=chunksize, chunk_overlap=chunkoverlap, separators=[
             "\n\n",
             "\n",
             "。|！|？",
@@ -33,6 +33,8 @@ text_splitter = RecursiveCharacterTextSplitter(
         ])
 
 logger_info, logger_error,logger_debug = setup_logging()
+
+top_k=cfg.SimilaritySearchCfg["top_k"]
 
 def Split_Documents(documents):
     all_chunks = []
@@ -59,7 +61,7 @@ def get_documents(index="faiss_index", query=""):
     start_time = time.time()
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
     #print(db)
-    docs = db.similarity_search_with_score(query)
+    docs = db.similarity_search_with_score(query,top_k)
     docs_page_content = " ".join([d[0].page_content for d in docs])
     #print(f"docs_page_content：{docs}")
     end_time = time.time()  # 记录结束时间
