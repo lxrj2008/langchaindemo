@@ -4,6 +4,7 @@ import os,json,pyodbc,copy
 import cfg,embedding
 from collections import deque
 from mylogging import setup_logging
+import requests
 
 os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
 os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
@@ -43,9 +44,9 @@ class Conversation:
                     function_name = tool_call.function.name
                     function_result = {}
                     args = tool_call.function.arguments
-                    if function_name == "get_contract_info":
+                    if function_name == "Get_Contract_Information":
                         logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
-                        function_response = get_contract_info(**json.loads(args))
+                        function_response = Get_Contract_Information(**json.loads(args))
                     
                     elif function_name=="answer_question" :
                         logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
@@ -127,6 +128,59 @@ def get_contract_info(exchange_code, clearing_code, contract_code,product_type):
         result_string += contract_info_string
     
     return result_string
+
+def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType,strikePrice=None,putCall=None):
+    try:
+        data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType}
+        if commodityType.upper()=="O":
+            ProductCode=ProductCode+"_"+putCall
+            data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType}
+        json_data = json.dumps(data, ensure_ascii=False).encode('utf-8')
+        headers = {'Content-Type': 'application/json; charset=utf-8'}
+        response = requests.request("POST", cfg.javaapi, headers=headers, data=json_data)
+        response.encoding = 'utf-8'
+        #response = requests.post(cfg.javaapi,headers=headers, data=json_data)
+        if response.status_code == 200:
+            content=response.json()["data"]
+            if(len(content)>0):
+               contract_info_string=''
+               num=1;
+               for item in content:
+                   contract_info_string += (
+                                            f"第{num}个合约\n"
+                                            f"合约代码：{item['contractCode']}\n"
+                                            f"中文名：{item['contractName']}\n"
+                                            f"英文名：{item['contractNameEn']}\n"
+                                            f"合约号：{item['contractNo']}\n"
+                                            f"商品代码：{item['commodityNo']}\n"
+                                            f"商品中文名：{item['commodityName']}\n"
+                                            f"商品英文名：{item['commodityNameEn']}\n"
+                                            f"商品币种：{item['commodityCurrencyNo']}\n"
+                                            f"币种名字：{item['commodityCurrencyName']}\n"
+                                            f"商品类型：{item['commodityType']}\n"
+                                            f"交易所代码：{item['exchangeNo']}\n"
+                                            f"交易所名称：{item['exchangeName']}\n"
+                                            f"账面跳点：{item['productDot']}\n"
+                                            f"最小变动单位：{item['upperTick']}\n"
+                                            f"进价单位：{item['lowerTick']}\n"
+                                            f"行情小数点位数：{item['dotNum']}\n"
+                                            f"首次通知日：{item['firstNoticeDay']}\n"
+                                            f"合约到期日：{item['expiryDate']}\n"
+                                            f"最后交易日：{item['lastTradeDate']}\n\n"
+                                           )   
+                   num += 1
+                   if num>5:
+                       break
+               return contract_info_string
+            else:
+                return '未查询到您要的合约数据'
+
+        else:
+            logger_error.error(f"request java api fial:{response.status_code}")
+            return None
+    except Exception as e:
+        logger_error.error(f"Get_Contract_Information error:{str(e)}")
+        return None
 
 def answer_question(question):
     index="faiss_index"

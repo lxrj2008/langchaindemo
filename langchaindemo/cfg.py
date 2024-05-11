@@ -3,29 +3,50 @@ tools = [
         {
     "type": "function",
     "function": {
-        "name": "get_contract_info",
-        "description": "根据交易所代码、清算代码、产品类型和合约日期查询对应的合约或产品信息",
+        "name": "Get_Contract_Information",
+        "description": "根据交易所代码、产品代码、合约日期等信息查询对应的合约数据",
         "parameters": {
             "type": "object",
             "properties": {
-                "exchange_code": {
-                    "type": "string",
-                    "description": "交易所代码,比如CME"
+                "ExchangeCode": {
+                    "type": "string", 
+                    "description": "交易所代码"
                 },
-                "clearing_code": {
+                "ProductCode": {
                     "type": "string",
-                    "description": "清算代码，比如MNQ"
+                    "description": "商品代码"
                 },
-                "contract_code": {
+                "commodityType": {
                     "type": "string",
-                    "description": "合约日期，比如20230900"
+                    "enum": ["F", "O"],
+                    "description": "商品类型,期货合约是用F表示，期权合约是用O表示,如果 commodityType 是 O（期权合约），那么 strikePrice就是必填项"
                 },
-                "product_type": {
+                "ContractDate": {
                     "type": "string",
-                    "description": "产品类型，比如FUT（期货）、OOF（期权）"
+                    "pattern":"^\\d{4}$",
+                    "description": "合约日期，比如2405,表示2024年5月份的合约"
+                },
+                "strikePrice": {
+                    "type": "number",
+                    "description": "行权价，如果 commodityType 是 O（期权合约），那么 strikePrice就是必填项"
+                },
+                "putCall": {
+                    "type": "string",
+                    "enum": ["C", "P"],
+                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），那么 putCall就是必填项"
                 }
+
             },
-            "required": ["exchange_code", "clearing_code", "contract_code",'product_type']
+            "required": ["ExchangeCode", "commodityType","ProductCode", "ContractDate"],
+            "if": {
+                "properties": {
+                  "commodityType": { "const": "O" }
+                  }
+                },
+              "then": {
+                "required": ["strikePrice","putCall"]
+              }
+
         }
     }
 }
@@ -34,7 +55,7 @@ tools = [
     "type": "function",
     "function": {
         "name": "answer_question",
-        "description": "回答工具{get_contract_info}以外的其他问题。",
+        "description": "回答工具{Get_Contract_Information}以外的其他问题。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -49,21 +70,21 @@ tools = [
 }]
 
 SystemPrompt = [
-                    {"role": "system", "content": "你是上海直达软件公司训练的智能客服小达达。直达软件专注于服务快速增长的全球金融市场,研发全球期货,期权,股票,牛熊证,认股权,基金,衍生品等交易平台、工具和行业解决方案"},
-                    {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要参数信息。"},
-                    {"role":"system","content":"Only use the functions you have been provided with"}
+                    {"role": "system", "content": "你是上海直达软件公司训练的智能查询助手小达达，你能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题"},
+                    {"role": "system", "content": "不要对要插入函数的值进行假设，如果用户请求不明确，请要求用户澄清"},
+                    {"role":"system","content":"只使用提供给你的函数"}
                ]
 
 ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，请回答不知道并且表明你的专长"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
-        "model_name": "gpt-35-turbo",
-        "api_base_url": "https://zdopenai2.openai.azure.com/",
+        "model_name": "gpt-4",
+        "api_base_url": "https://zdai1.openai.azure.com/",
         "api_version":"2024-02-15-preview",
-        "api_key": "d4d9c0e614be43da919c5695a818dc41",
+        "api_key": "66332ca65cac487e8d64e4d63309b8cd",
         "openai_proxy": "",
-        "embedding":"text-embedding-ada-002"
+        "embedding":"text-embedding-3-large"
     },
 }
 
@@ -81,3 +102,4 @@ hostinfo={"hostname":"192.168.200.57","port":"8000"}
 CompleteionsPara={"temperature":0.3,"max_tokens":1000}
 ChatRound=5
 wordsnum=300
+javaapi="http://192.168.200.28:16001/chatGPT/contractInfo"
