@@ -53,12 +53,12 @@ class Conversation:
                         logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
                         function_response = Get_Contract_Information(**json.loads(args))
                     
-                    elif function_name=="answer_question" :
+                    elif function_name=="answer_other_question" :
                         logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
-                        function_response=answer_question(**json.loads(args))
+                        function_response=answer_other_question(**json.loads(args))
                     else:
                         logger_debug.info(f"{self.username}:no function selected,but default functionName:{function_name},args:{args}");
-                        function_response = answer_question(**json.loads(args))
+                        function_response = answer_other_question(**json.loads(args))
                         
                     self.messages.append(
                        {
@@ -167,7 +167,7 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
         logger_error.error(f"Get_Contract_Information error:{str(e)}")
         return None
 
-def answer_question(question):
+def answer_other_question(question):
     index="faiss_index"
     query = question
     txts =embedding.get_documents(index,query)

@@ -54,7 +54,7 @@ tools = [
         {
     "type": "function",
     "function": {
-        "name": "answer_question",
+        "name": "answer_other_question",
         "description": "回答工具{Get_Contract_Information}以外的其他问题。",
         "parameters": {
             "type": "object",
