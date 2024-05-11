@@ -103,3 +103,7 @@ CompleteionsPara={"temperature":0.3,"max_tokens":1000}
 ChatRound=5
 wordsnum=300
 javaapi="http://192.168.200.28:16001/chatGPT/contractInfo"
+
+contentFilterAnswer="对不起，关于仇恨、性、暴力和自残的相关内容我拒绝回答！"
+
+inneralError="发生内部异常，请联系技术支持！"

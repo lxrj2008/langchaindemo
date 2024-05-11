@@ -14,6 +14,10 @@ logger_info, logger_error,logger_debug = setup_logging()
 
 client = AzureOpenAI()
 
+class ErrorMessage:
+    def __init__(self, content):
+        self.content = content
+
 class Conversation:
     
     def __init__(self,username=None):
@@ -21,7 +25,6 @@ class Conversation:
         self.tools=cfg.tools
         self.messages = deque(copy.deepcopy(cfg.SystemPrompt))#first in first out queue
         self.round=0;
-        
 
     def ask(self,question):
         try:
@@ -36,6 +39,8 @@ class Conversation:
                 temperature=cfg.CompleteionsPara["temperature"],
                 max_tokens=cfg.CompleteionsPara["max_tokens"]
             )
+            logger_debug.info(f'{self.username} first token：{str(response.usage)}')
+            logger_debug.info(f'{self.username} first prompt filter：{str(response.prompt_filter_results)}')
             response_message = response.choices[0].message
             tool_calls = response_message.tool_calls
             if tool_calls:
@@ -70,6 +75,8 @@ class Conversation:
                 #response_format={ "type": "json_object" },
                 temperature=cfg.CompleteionsPara["temperature"],
                 max_tokens=cfg.CompleteionsPara["max_tokens"])
+                logger_debug.info(f'{self.username} second token：{str(second_response.usage)}')
+                logger_debug.info(f'{self.username} second prompt filter：{str(second_response.prompt_filter_results)}')
                 response_message = second_response.choices[0].message
             else:
                 logger_debug.info(f'{self.username}:no tools is called')
@@ -100,35 +107,15 @@ class Conversation:
             logger_debug.info(f"{self.username}:{self.messages}");
             return response_message
         except Exception as e:
-            print(e)
-            logger_error.error(f"{self.username}:An error occurred: %s", e)
-            return e
-
-
-def get_contract_info(exchange_code, clearing_code, contract_code,product_type):
-
-    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=192.168.200.57;DATABASE=CMEClearDB;UID=sa;PWD=123456')
-    
-    # 构建查询语句
-    query = f"SELECT top 10 * FROM TContract WHERE MQMExchangeCode like '%{exchange_code}%' AND ClearProductCode like '%{clearing_code}%' AND MMY like '%{contract_code}%' AND MQMSecType like '%{product_type}%'"
-    
-    
-    cursor = conn.cursor()
-    cursor.execute(query)
-    rows = cursor.fetchall()
-    
-    
-    cursor.close()
-    conn.close()
-    
-    # 将结果拼接成字符串格式再次发给LLM推理
-    result_string = ""
-    for row in rows:
-        contract_info_string = f"交易所代码：{row[1]}，清算代码：{row[2]}，合约日期：{row[4]}，产品类型：{row[5]}，最后交易日： {str(row[6])}，看涨看跌：{row[8]}，行权价：{row[9]}\n"
-        result_string += contract_info_string
-    
-    return result_string
-
+            
+            logger_error.error(f"{self.username}：An error occurred: %s", e)
+            if e.status_code==400 and e.code=='content_filter':
+                response_message = ErrorMessage(cfg.contentFilterAnswer)
+            else:
+                response_message=ErrorMessage(cfg.inneralError)
+            logger_info.info(f"{self.username} answer:{response_message.content}"); 
+            return response_message
+            
 def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType,strikePrice=None,putCall=None):
     try:
         data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType}
@@ -139,14 +126,13 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
         headers = {'Content-Type': 'application/json; charset=utf-8'}
         response = requests.request("POST", cfg.javaapi, headers=headers, data=json_data)
         response.encoding = 'utf-8'
-        #response = requests.post(cfg.javaapi,headers=headers, data=json_data)
         if response.status_code == 200:
             content=response.json()["data"]
             if(len(content)>0):
-               contract_info_string=''
-               num=1;
-               for item in content:
-                   contract_info_string += (
+                contract_info_string=''
+                num=1;
+                for item in content:
+                    contract_info_string += (
                                             f"第{num}个合约\n"
                                             f"合约代码：{item['contractCode']}\n"
                                             f"中文名：{item['contractName']}\n"
@@ -167,14 +153,13 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
                                             f"首次通知日：{item['firstNoticeDay']}\n"
                                             f"合约到期日：{item['expiryDate']}\n"
                                             f"最后交易日：{item['lastTradeDate']}\n\n"
-                                           )   
-                   num += 1
-                   if num>5:
-                       break
-               return contract_info_string
+                                            )   
+                    num += 1
+                    if num>5:
+                        break
+                return contract_info_string
             else:
                 return '未查询到您要的合约数据'
-
         else:
             logger_error.error(f"request java api fial:{response.status_code}")
             return None
@@ -187,4 +172,6 @@ def answer_question(question):
     query = question
     txts =embedding.get_documents(index,query)
     return txts
+
+
 

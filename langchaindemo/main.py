@@ -2,7 +2,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel,constr
 from Conversation import Conversation  
-from cfg import hostinfo
 import uvicorn
 import cfg
 
@@ -29,13 +28,13 @@ async def chat(chat_request: ChatRequest):
             conversation_manager[username] = Conversation(username)
 
         conversation = conversation_manager[username]
-        response_message = conversation.ask(user_input)
+        response_message = conversation.ask(user_input) 
 
         # 返回助手的回答
         return {"response": response_message.content}
     
     except Exception as e:
-        return {"An error occurred": str(e)}
+        return cfg.inneralError
 
 
 # 添加根路由
@@ -45,4 +44,4 @@ async def read_root():
 
 if __name__ == "__main__":
     
-    uvicorn.run(app, host=hostinfo["hostname"], port=int(hostinfo["port"]))
+    uvicorn.run(app, host=cfg.hostinfo["hostname"], port=int(cfg.hostinfo["port"]))
