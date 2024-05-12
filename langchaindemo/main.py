@@ -16,7 +16,8 @@ class ChatResponse(BaseModel):
 
 conversation_manager = {}
 
-@app.post("/chat", response_model=ChatResponse,summary="Chat with Assistant", description="请向助手提问吧.")
+@app.post("/chat", response_model=ChatResponse,summary="Chat with Assistant", description="""请向助手提问吧.1、username必须要传，且是每个终端的值，切勿通过java api生成一个固定值传递
+2、AIChatService需要通过这个username这个参数来维护每个终端的多轮对话信息，以达到每个终端的ask和answer不会互相影响的目的""")
 async def chat(chat_request: ChatRequest):
     try:
         # 从请求中获取用户输入的文本和用户名
