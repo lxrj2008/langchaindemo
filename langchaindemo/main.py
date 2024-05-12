@@ -16,7 +16,7 @@ class ChatResponse(BaseModel):
 
 conversation_manager = {}
 
-@app.post("/chat", response_model=ChatResponse)
+@app.post("/chat", response_model=ChatResponse,summary="Chat with Assistant", description="请向助手提问吧.")
 async def chat(chat_request: ChatRequest):
     try:
         # 从请求中获取用户输入的文本和用户名
@@ -38,7 +38,7 @@ async def chat(chat_request: ChatRequest):
 
 
 # 添加根路由
-@app.get("/")
+@app.get("/",summary="Root", description="欢迎进入直达AI助手api根目录")
 async def read_root():
     return {"message": "Welcome, please visit /chat page to chat，api docs is host/docs"}
 
