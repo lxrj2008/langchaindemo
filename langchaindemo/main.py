@@ -9,7 +9,7 @@ app = FastAPI()
 
 class ChatRequest(BaseModel):
     question: constr(max_length=cfg.wordsnum) 
-    username: str 
+    username: constr(min_length=1) 
 
 class ChatResponse(BaseModel):
     response: str
