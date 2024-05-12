@@ -19,7 +19,7 @@ tools = [
                 "commodityType": {
                     "type": "string",
                     "enum": ["F", "O"],
-                    "description": "商品类型,期货合约是用F表示，期权合约是用O表示,如果 commodityType 是 O（期权合约），那么 strikePrice就是必填项"
+                    "description": "商品类型,期货合约是用F表示，期权合约是用O表示"
                 },
                 "ContractDate": {
                     "type": "string",
@@ -28,24 +28,24 @@ tools = [
                 },
                 "strikePrice": {
                     "type": "number",
-                    "description": "行权价，如果 commodityType 是 O（期权合约），那么 strikePrice就是必填项"
+                    "description": "行权价，如果 commodityType 是 O（期权合约），因为期权合约的不同行权价会非常多，请告诉用户提供strikePrice进行过滤，不提供也可以，但可能会查询出很多记录"
                 },
                 "putCall": {
                     "type": "string",
                     "enum": ["C", "P"],
-                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），那么 putCall就是必填项"
+                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），请告诉用户提供putCall，不提供也可以，但可能会查询出很多记录"
                 }
 
             },
             "required": ["ExchangeCode", "commodityType","ProductCode", "ContractDate"],
-            "if": {
-                "properties": {
-                  "commodityType": { "const": "O" }
-                  }
-                },
-              "then": {
-                "required": ["strikePrice","putCall"]
-              }
+            #"if": {
+            #    "properties": {
+            #      "commodityType": { "const": "O" }
+            #      }
+            #    },
+            #  "then": {
+            #    "required": ["putCall"]
+            #  }
 
         }
     }

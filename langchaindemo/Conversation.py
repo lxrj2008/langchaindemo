@@ -118,10 +118,10 @@ class Conversation:
             
 def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType,strikePrice=None,putCall=None):
     try:
-        data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType}
-        if commodityType.upper()=="O":
+        
+        if commodityType.upper()=="O" and putCall:
             ProductCode=ProductCode+"_"+putCall
-            data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType}
+        data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType,"strikePrice":strikePrice}
         json_data = json.dumps(data, ensure_ascii=False).encode('utf-8')
         headers = {'Content-Type': 'application/json; charset=utf-8'}
         response = requests.request("POST", cfg.javaapi, headers=headers, data=json_data)
@@ -162,10 +162,10 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
                 return '未查询到您要的合约数据'
         else:
             logger_error.error(f"request java api fial:{response.status_code}")
-            return None
+            return ""
     except Exception as e:
         logger_error.error(f"Get_Contract_Information error:{str(e)}")
-        return None
+        return ""
 
 def answer_other_question(question):
     index="faiss_index"
