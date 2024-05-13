@@ -99,9 +99,9 @@ TextSplitterCfg={
     "overlap":50
     }
 
-hostinfo={"hostname":"192.168.200.57","port":"8000"}
+hostinfo={"hostname":"192.168.200.57","port":"8001"}
 
-CompleteionsPara={"temperature":0.3,"max_tokens":1000}
+CompleteionsPara={"temperature":0,"max_tokens":8192}
 ChatRound=5
 wordsnum=300
 javaapi="http://192.168.200.28:16001/chatGPT/contractInfo"
