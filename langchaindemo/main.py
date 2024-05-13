@@ -8,8 +8,8 @@ import cfg
 app = FastAPI()
 
 class ChatRequest(BaseModel):
-    question: constr(max_length=cfg.wordsnum) 
-    username: constr(min_length=1) 
+    question: constr(min_length=1,max_length=cfg.wordsnum) 
+    username: constr(min_length=1,max_length=60) 
 
 class ChatResponse(BaseModel):
     response: str
