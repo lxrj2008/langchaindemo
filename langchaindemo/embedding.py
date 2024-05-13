@@ -1,8 +1,8 @@
 
 from http import client
 from pydoc import doc
-from openai import AzureOpenAI # for calling the OpenAI API
-import os # for getting API token from env variable OPENAI_API_KEY
+from openai import AzureOpenAI 
+import os 
 import documentloader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import AzureOpenAIEmbeddings
@@ -15,7 +15,7 @@ from mylogging import setup_logging
 chunksize=cfg.TextSplitterCfg["chunksize"]
 chunkoverlap=cfg.TextSplitterCfg["overlap"]
 
-# Set up environment variables
+
 os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
 os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
 os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_base_url"]
@@ -41,7 +41,7 @@ def Split_Documents(documents):
     for singledoc in documents:
         chunks = text_splitter.split_documents(singledoc)
         for chunk in chunks:
-            all_chunks.append(chunk)  # 将每个文档的 chunks 合并到一个列表中
+            all_chunks.append(chunk) 
     return all_chunks
 
 
@@ -57,15 +57,14 @@ def create_and_save_faiss_index(path='knowledge_base/'):
     all_chunks=Split_Documents(loaderdoc)
     save_documents(all_chunks)
 
-def get_documents(index="faiss_index", query=""):
+def get_documents(index="faiss_index", query="",relevance_score=0):
     start_time = time.time()
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
-    #print(db)
-    docs = db.similarity_search_with_score(query,top_k)
-    docs_page_content = " ".join([d[0].page_content for d in docs])
-    #print(f"docs_page_content：{docs}")
-    end_time = time.time()  # 记录结束时间
-    elapsed_time = end_time - start_time  # 计算耗时
+    docs = db.similarity_search_with_relevance_scores(query,top_k)
+    filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]
+    docs_page_content = " ".join([d[0].page_content for d in filtered_docs])
+    end_time = time.time()  
+    elapsed_time = end_time - start_time  
     logger_debug.info(f'搜索嵌知识库耗时：{elapsed_time}秒')
     return docs_page_content
 
@@ -140,13 +139,13 @@ if __name__ == '__main__':
     
     while True:
         index = "faiss_index"
-        query = input("You: ")  # 用户输入问题
+        query = input("You: ")  
         if query.lower() in ["exit", "quit", "bye"]:
             print("再见！")
-            break  # 如果用户输入 exit、quit 或 bye，则退出循环
-        current_time = datetime.now().strftime("%H:%M:%S")  # 获取当前系统时间
-        print(f"[{current_time}] you: {query}")  # 打印用户输入及时间
-        txts = get_documents(index, query)  # 获取文档列表，暂时为空列表
+            break  
+        current_time = datetime.now().strftime("%H:%M:%S")  
+        print(f"[{current_time}] you: {query}")  
+        txts = get_documents(index, query,cfg.SimilaritySearchCfg["min_score"])  
         client = AzureOpenAI()
         completion = client.chat.completions.create(
             model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
@@ -155,5 +154,5 @@ if __name__ == '__main__':
                 {"role": "user", "content": query}
             ]
         )
-        current_time = datetime.now().strftime("%H:%M:%S")  # 获取当前系统时间
-        print(f"[{current_time}] Bot: {completion.choices[0].message.content}")  # 打印 AI 回答及时间
+        current_time = datetime.now().strftime("%H:%M:%S") 
+        print(f"[{current_time}] Bot: {completion.choices[0].message.content}")  

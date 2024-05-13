@@ -48,10 +48,9 @@ def load_pdf_from_one(filepath):
 def load_word_from_dir(directory_path):
     data = []
     for filename in os.listdir(directory_path):
-        # check if the file is a doc or docx file
-        # 检查所有doc以及docx后缀的文件
+        
         if filename.endswith(".doc") or filename.endswith(".docx"):
-            # langchain自带功能，加载word文档
+            
             loader = UnstructuredWordDocumentLoader(f'{directory_path}/{filename}')
             print(loader)
             data.append(loader.load())
@@ -63,7 +62,6 @@ def load_word_from_one(filename):
     data = ''
     if filename.endswith(".doc") or filename.endswith(".docx"):
         print(filename)
-        # print the file name
         loader = UnstructuredWordDocumentLoader(f'{filename}')
         print(loader)
         data = loader.load()
@@ -88,7 +86,6 @@ def load_text_from_one(filename):
     data = ''
     if filename.endswith(".txt"):
         print(filename)
-        # print the file name
         loader = TextLoader(f'{filename}',encoding='utf-8')
         print(loader)
         data = loader.load()
@@ -113,18 +110,13 @@ def load_csv_from_one(filename):
     data = ''
     if filename.endswith(".csv"):
         print(filename)
-        # print the file name
         loader = CSVLoader(f'{filename}',encoding='utf-8')
         print(loader)
         data = loader.load()
     return data
  
  
-# load all files from directory
-# param glob = "**/*.文件后缀"  控制要加载的文件
-# param show_progress = true 显示进度条
-# param use_multithreading = true 利用多线程
-# param loader_cls = CSVLoader  指定加载器 | UnstructuredFileLoader
+
 def load_all_from_dir(directory_path, glob, show_progress=False, use_multithreading=False, loader_cls=UnstructuredFileLoader):
     loader = DirectoryLoader(directory_path, glob=glob, show_progress=show_progress, use_multithreading=use_multithreading, loader_cls=loader_cls)
     data = loader.load()

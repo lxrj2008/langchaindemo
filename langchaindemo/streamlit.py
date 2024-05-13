@@ -8,11 +8,11 @@ os.environ["AZURE_OPENAI_ENDPOINT"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_b
 client = AzureOpenAI()
 
 while True:
-    user_input = input("you: ")  # 用户输入
+    user_input = input("you: ") 
     if user_input.lower() in ["exit", "quit", "bye"]:
         print("再见！")
-        break  # 如果用户输入 exit、quit 或 bye，则退出循环
-    # 调用 OpenAI API 进行回复
+        break 
+   
     stream = client.chat.completions.create(
         model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
         messages=[
