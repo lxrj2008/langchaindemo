@@ -170,7 +170,7 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
 def answer_other_question(question):
     index="faiss_index"
     query = question
-    txts =embedding.get_documents(index,query)
+    txts =embedding.get_documents(index,query,cfg.SimilaritySearchCfg["min_score"])
     return txts
 
 
