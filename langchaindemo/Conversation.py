@@ -36,8 +36,8 @@ class Conversation:
                 messages=self.messages,
                 tools=self.tools,
                 tool_choice="auto",
-                temperature=cfg.CompleteionsPara["temperature"],
-                max_tokens=cfg.CompleteionsPara["max_tokens"]
+                n=1,
+                temperature=cfg.CompleteionsPara["temperature"]
             )
             logger_debug.info(f'{self.username} first token：{str(response.usage)}')
             logger_debug.info(f'{self.username} first prompt filter：{str(response.prompt_filter_results)}')
@@ -73,8 +73,7 @@ class Conversation:
                 model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
                 #response_format={ "type": "json_object" },
-                temperature=cfg.CompleteionsPara["temperature"],
-                max_tokens=cfg.CompleteionsPara["max_tokens"])
+                temperature=cfg.CompleteionsPara["temperature"])
                 logger_debug.info(f'{self.username} second token：{str(second_response.usage)}')
                 logger_debug.info(f'{self.username} second prompt filter：{str(second_response.prompt_filter_results)}')
                 response_message = second_response.choices[0].message
