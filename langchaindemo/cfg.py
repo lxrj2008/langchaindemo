@@ -76,7 +76,7 @@ SystemPrompt = [
                     {"role":"system","content":"只使用提供给你的函数"}
                ]
 
-ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，请回答不知道并且表明你的专长或者根据你的经验回答"
+ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，请回答不知道并且表明你的专长或者根据你已拥有的知识来回答"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
