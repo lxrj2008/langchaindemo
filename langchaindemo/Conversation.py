@@ -73,6 +73,7 @@ class Conversation:
                 model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],
                 messages=self.messages,
                 #response_format={ "type": "json_object" },
+                n=1,
                 temperature=cfg.CompleteionsPara["temperature"])
                 logger_debug.info(f'{self.username} second token：{str(second_response.usage)}')
                 logger_debug.info(f'{self.username} second prompt filter：{str(second_response.prompt_filter_results)}')
