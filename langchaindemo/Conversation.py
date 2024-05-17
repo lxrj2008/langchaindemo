@@ -119,8 +119,12 @@ class Conversation:
             
 def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType,strikePrice=None,putCall=None):
     try:
+        logger_debug.info(f"原始的ExchangeCode：{ExchangeCode}")
+        logger_debug.info(f"原始的ProductCode：{ProductCode}")
         ExchangeCode=embedding.get_mapping_documents("mapping_faiss",ExchangeCode,cfg.SimilaritySearchCfg["mapping_min_score"])
         ProductCode=embedding.get_mapping_documents("mapping_faiss",ProductCode,cfg.SimilaritySearchCfg["mapping_min_score"])
+        logger_debug.info(f"Mapping后的ExchangeCode：{ExchangeCode}")
+        logger_debug.info(f"Mapping后的ProductCode：{ProductCode}")
         if commodityType.upper()=="O" and putCall:
             ProductCode=ProductCode+"_"+putCall
         data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType,"strikePrice":strikePrice}

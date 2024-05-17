@@ -11,6 +11,7 @@ import cfg
 from datetime import datetime
 import time
 from mylogging import setup_logging
+import re
 
 chunksize=cfg.TextSplitterCfg["chunksize"]
 chunkoverlap=cfg.TextSplitterCfg["overlap"]
@@ -86,6 +87,7 @@ def get_mapping_documents(index="faiss_index", query="",relevance_score=0):
         for line in lines:
             if line.startswith("code:"):
                 codevalue= line.split(':')[1].strip()
+                codevalue=re.sub(r'_(C|P|S|W)', '', codevalue)
                 break
         return codevalue
     else:
