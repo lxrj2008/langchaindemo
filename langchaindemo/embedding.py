@@ -57,6 +57,12 @@ def create_and_save_faiss_index(path='knowledge_base/'):
     all_chunks=Split_Documents(loaderdoc)
     save_documents(all_chunks)
 
+def InitMappingIndex(path='exchangdoc/'):
+    
+    loaderdoc = documentloader.load_csv_from_dir(path)
+    all_chunks=Split_Documents(loaderdoc)
+    save_documents(all_chunks,"mapping_faiss")
+
 def get_documents(index="faiss_index", query="",relevance_score=0):
     start_time = time.time()
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
@@ -67,6 +73,23 @@ def get_documents(index="faiss_index", query="",relevance_score=0):
     elapsed_time = end_time - start_time  
     logger_debug.info(f'搜索嵌知识库耗时：{elapsed_time}秒')
     return docs_page_content
+
+def get_mapping_documents(index="faiss_index", query="",relevance_score=0):
+    start_time = time.time()
+    db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    docs = db.similarity_search_with_relevance_scores(query,1)
+    filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]
+    docs_page_content = " ".join([d[0].page_content for d in filtered_docs]).strip()
+    if docs_page_content:
+        codevalue=query
+        lines = docs_page_content.split('\n')
+        for line in lines:
+            if line.startswith("code:"):
+                codevalue= line.split(':')[1].strip()
+                break
+        return codevalue
+    else:
+        return query
 
 def add_txt_from_dir_bymerge(index="faiss_index"):
     db1 = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
@@ -131,6 +154,7 @@ def add_csv_from_dir(index="faiss_index"):
     
 
 if __name__ == '__main__':
+    #InitMappingIndex()
     #create_and_save_faiss_index()
     #add_csv_from_dir()
     #add_txt_from_dir()

@@ -4,36 +4,36 @@ tools = [
     "type": "function",
     "function": {
         "name": "Get_Contract_Information",
-        "description": "根据交易所代码、产品代码、合约日期等信息查询对应的合约数据",
+        "description": "根据交易所代码、产品代码、合约日期、商品类型等信息查询对应的合约数据",
         "parameters": {
             "type": "object",
             "properties": {
                 "ExchangeCode": {
                     "type": "string", 
-                    "description": "交易所代码"
+                    "description": "这是交易所代码，必填项"
                 },
                 "ProductCode": {
                     "type": "string",
-                    "description": "商品代码"
+                    "description": "这是商品代码，必填项"
                 },
                 "commodityType": {
                     "type": "string",
                     "enum": ["F", "O"],
-                    "description": "商品类型,期货合约是用F表示，期权合约是用O表示"
+                    "description": "这是商品类型,必填项。期货合约是用F表示，期权合约是用O表示"
                 },
                 "ContractDate": {
                     "type": "string",
                     "pattern":"^\\d{4}$",
-                    "description": "合约日期，比如2405,表示2024年5月份的合约，如果是LME（伦敦金属交易），提示用户ContractDate参数输入3M"
+                    "description": "这是合约日期，必填项。比如2405,表示2024年5月份的合约，如果是LME（伦敦金属交易），ContractDate参数输入3M"
                 },
                 "strikePrice": {
                     "type": "number",
-                    "description": "行权价，如果 commodityType 是 O（期权合约），因为期权合约的不同行权价会非常多，请告诉用户提供strikePrice进行过滤，不提供也可以，但可能会查询出很多记录"
+                    "description": "行权价，如果 commodityType 是 O（期权合约），因为期权合约的不同行权价会非常多，请提供strikePrice进行过滤，不提供也可以，但可能会查询出很多记录"
                 },
                 "putCall": {
                     "type": "string",
                     "enum": ["C", "P"],
-                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），请告诉用户提供putCall，不提供也可以，但可能会查询出很多记录"
+                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），请提供putCall，不提供也可以，但可能会查询出很多记录"
                 }
 
             },
@@ -92,7 +92,8 @@ ONLINE_LLM_MODEL = {
 SimilaritySearchCfg={
     "top_k":4,
     "fetch_k":20,
-    "min_score":0.2
+    "min_score":0.2,
+    "mapping_min_score":0.3
     }
 TextSplitterCfg={
     "chunksize":250,

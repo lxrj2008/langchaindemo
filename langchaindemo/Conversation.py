@@ -1,4 +1,5 @@
 
+from typing import Mapping
 from openai import AzureOpenAI
 import os,json,pyodbc,copy
 import cfg,embedding
@@ -118,7 +119,8 @@ class Conversation:
             
 def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType,strikePrice=None,putCall=None):
     try:
-        
+        ExchangeCode=embedding.get_mapping_documents("mapping_faiss",ExchangeCode,cfg.SimilaritySearchCfg["mapping_min_score"])
+        ProductCode=embedding.get_mapping_documents("mapping_faiss",ProductCode,cfg.SimilaritySearchCfg["mapping_min_score"])
         if commodityType.upper()=="O" and putCall:
             ProductCode=ProductCode+"_"+putCall
         data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate,"commodityType":commodityType,"strikePrice":strikePrice}
