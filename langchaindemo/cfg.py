@@ -28,24 +28,24 @@ tools = [
                 },
                 "strikePrice": {
                     "type": "number",
-                    "description": "行权价，如果 commodityType 是 O（期权合约），因为期权合约的不同行权价会非常多，请提供strikePrice进行过滤，不提供也可以，但可能会查询出很多记录"
+                    "description": "行权价，如果 commodityType 是 O（期权合约），请提供strikePrice"
                 },
                 "putCall": {
                     "type": "string",
                     "enum": ["C", "P"],
-                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），请提供putCall，不提供也可以，但可能会查询出很多记录"
+                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），请提供putCall"
                 }
 
             },
             "required": ["ExchangeCode", "commodityType","ProductCode", "ContractDate"],
-            #"if": {
-            #    "properties": {
-            #      "commodityType": { "const": "O" }
-            #      }
-            #    },
-            #  "then": {
-            #    "required": ["putCall"]
-            #  }
+            "if": {
+                "properties": {
+                  "commodityType": { "const": "O" }
+                  }
+                },
+              "then": {
+                "required": ["putCall","strikePrice"]
+              }
 
         }
     }
@@ -100,7 +100,7 @@ TextSplitterCfg={
     "overlap":50
     }
 
-hostinfo={"hostname":"192.168.200.57","port":"8001"}
+hostinfo={"hostname":"192.168.200.57","port":"8000"}
 
 CompleteionsPara={"temperature":0.3,"max_tokens":1000}
 ChatRound=5
