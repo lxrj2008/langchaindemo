@@ -168,12 +168,12 @@ def add_pdf_from_dir(index="faiss_index"):
 
 if __name__ == '__main__':
     #InitMappingIndex()
-    create_and_save_faiss_index()
+    #create_and_save_faiss_index()
     #add_csv_from_dir()
     #add_txt_from_dir()
     #add_doc_from_dir()
     #add_pdf_from_dir()
-    delfromdb('faiss_index','Add_docments//ask_question.csv')
+    #delfromdb('faiss_index','Add_docments//ask_question.csv')
     
     while True:
         index = "faiss_index"
