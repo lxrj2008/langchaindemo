@@ -1,5 +1,5 @@
 
-from fastapi import FastAPI
+from fastapi import FastAPI,Response
 from pydantic import BaseModel,constr
 from Conversation import Conversation  
 import uvicorn
@@ -32,7 +32,9 @@ async def chat(chat_request: ChatRequest):
         response_message = conversation.ask(user_input) 
 
 
-        return {"response": response_message.content}
+        # 设置 Content-Type 为 text/plain
+        headers = {"Content-Type": "text/plain"}
+        return Response(content=response_message.content, headers=headers)
     
     except Exception as e:
         return cfg.inneralError
