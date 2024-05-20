@@ -54,7 +54,7 @@ def save_documents(documents,index = "faiss_index"):
 
 def create_and_save_faiss_index(path='knowledge_base/'):
     
-    loaderdoc = documentloader.load_word_from_dir(path)
+    loaderdoc = documentloader.load_csv_from_dir(path)
     all_chunks=Split_Documents(loaderdoc)
     save_documents(all_chunks)
 
@@ -161,7 +161,7 @@ if __name__ == '__main__':
     #add_csv_from_dir()
     #add_txt_from_dir()
     #add_doc_from_dir()
-    #delfromdb('faiss_index','Add_docments//b.txt')
+    #delfromdb('faiss_index','Add_docments//ask_question.csv')
     
     while True:
         index = "faiss_index"
