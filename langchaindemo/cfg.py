@@ -96,8 +96,8 @@ SimilaritySearchCfg={
     "mapping_min_score":0.3
     }
 TextSplitterCfg={
-    "chunksize":250,
-    "overlap":50
+    "chunksize":600,
+    "overlap":20
     }
 
 hostinfo={"hostname":"192.168.200.57","port":"8000"}
