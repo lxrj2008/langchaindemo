@@ -1,5 +1,4 @@
 
-from typing import Mapping
 from openai import AzureOpenAI
 import os,json,pyodbc,copy
 import cfg,embedding
@@ -112,6 +111,10 @@ class Conversation:
             logger_error.error(f"{self.username}：An error occurred: %s", e)
             if e.status_code==400 and e.code=='content_filter':
                 response_message = ErrorMessage(cfg.contentFilterAnswer)
+            if e.status_code==400 and e.code=='context_length_exceeded':
+                self.messages=deque(copy.deepcopy(cfg.SystemPrompt))
+                self.round=0
+                response_message = ErrorMessage("本轮会话tokens已超上限，已帮您重置，请继续提问吧！")
             else:
                 response_message=ErrorMessage(cfg.inneralError)
             logger_info.info(f"{self.username} answer:{response_message.content}"); 
@@ -159,13 +162,16 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
                                             f"首次通知日：{item['firstNoticeDay']}\n"
                                             f"合约到期日：{item['expiryDate']}\n"
                                             f"最后交易日：{item['lastTradeDate']}\n\n"
+                                            #f"行权价：{item['strikePrice']}\n\n"
+                                            #f"保证金：{item['defaultDeposit']}\n\n"
+                                            #f"手续费：{item['defaultFee']}\n\n"
                                             )   
                     num += 1
                     if num>5:
                         break
                 return contract_info_string
             else:
-                return '未查询到您要的合约数据'
+                return '未查询到您要的合约数据,请确认查询条件是否正确'
         else:
             logger_error.error(f"request java api fial:{response.status_code}")
             return ""
