@@ -153,15 +153,27 @@ def add_csv_from_dir(index="faiss_index"):
     db.add_documents(all_chunks)
     db.save_local(index)
     print("ADD FAISS IS COMPLETE")
+
+def add_pdf_from_dir(index="faiss_index"):
+    db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
+    
+    loaderdoc=documentloader.load_pdf_from_dir("Add_docments/")
+    if len(loaderdoc)==0:
+        return
+    all_chunks=Split_Documents(loaderdoc)
+    db.add_documents(all_chunks)
+    db.save_local(index)
+    print("ADD FAISS IS COMPLETE")
     
 
 if __name__ == '__main__':
     #InitMappingIndex()
-    #create_and_save_faiss_index()
+    create_and_save_faiss_index()
     #add_csv_from_dir()
     #add_txt_from_dir()
     #add_doc_from_dir()
-    #delfromdb('faiss_index','Add_docments//ask_question.csv')
+    #add_pdf_from_dir()
+    delfromdb('faiss_index','Add_docments//ask_question.csv')
     
     while True:
         index = "faiss_index"
