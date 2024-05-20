@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, constr
+from pydantic import BaseModel,constr
 from Conversation import Conversation  
 import uvicorn
 import cfg
@@ -28,8 +28,8 @@ async def chat(chat_request: ChatRequest):
         conversation = conversation_manager[username]
         response_message = conversation.ask(user_input) 
 
-        return {"AI_Response": response_message.content}
-    
+        return {"Response": response_message.content}
+ 
     except Exception as e:
         return cfg.inneralError
 
