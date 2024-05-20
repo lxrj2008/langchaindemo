@@ -164,9 +164,9 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
                                             f"首次通知日：{item['firstNoticeDay']}\n"
                                             f"合约到期日：{item['expiryDate']}\n"
                                             f"最后交易日：{item['lastTradeDate']}\n\n"
-                                            #f"行权价：{item['strikePrice']}\n\n"
-                                            #f"保证金：{item['defaultDeposit']}\n\n"
-                                            #f"手续费：{item['defaultFee']}\n\n"
+                                            f"行权价：{item['strikePrice']}\n\n"
+                                            f"保证金：{item['defaultDeposit']}\n\n"
+                                            f"手续费：{item['defaultFee']}\n\n"
                                             )   
                     num += 1
                     if num>5:
