@@ -172,7 +172,7 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
                                             f"最后交易日：{item['lastTradeDate']}\n"
                                             f"行权价：{item['strikePrice']}\n"
                                             f"保证金：{item['defaultDeposit']}\n"
-                                            f"手续费：{item['defaultFee']}"
+                                            f"手续费：{item['defaultFee']}\n"
                                             )   
                     num += 1
                     if num>5:
