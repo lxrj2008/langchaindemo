@@ -1,6 +1,6 @@
 
 from openai import AzureOpenAI
-import os,json,pyodbc,copy
+import os,json,copy
 import cfg,embedding
 from collections import deque
 from mylogging import setup_logging
