@@ -1,5 +1,6 @@
 
 from http import client
+import json
 from pydoc import doc
 from openai import AzureOpenAI 
 import os 
@@ -36,6 +37,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 logger_info, logger_error,logger_debug = setup_logging()
 
 top_k=cfg.SimilaritySearchCfg["top_k"]
+button_name_pattern = r"\*按钮名称\*:\s*(.*)"
 
 def Split_Documents(documents):
     all_chunks = []
@@ -69,11 +71,19 @@ def get_documents(index="faiss_index", query="",relevance_score=0):
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
     docs = db.similarity_search_with_relevance_scores(query,top_k)
     filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]
+    button_names = []
+    for d in filtered_docs:
+        match = re.search(button_name_pattern, d[0].page_content)
+        if match:
+            button_names.append(match.group(1).strip())
+            d[0].page_content=re.sub(button_name_pattern, '', d[0].page_content)
     docs_page_content = " ".join([d[0].page_content for d in filtered_docs])
+    button_name = button_names[0] if button_names else ''
+    data={"content":f"{docs_page_content}","button":f"{button_name}"}
     end_time = time.time()  
     elapsed_time = end_time - start_time  
     logger_debug.info(f'搜索嵌知识库耗时：{elapsed_time}秒')
-    return docs_page_content
+    return data
 
 def get_mapping_documents(index="faiss_index", query="",relevance_score=0):
     start_time = time.time()
@@ -183,7 +193,7 @@ if __name__ == '__main__':
             break  
         current_time = datetime.now().strftime("%H:%M:%S")  
         print(f"[{current_time}] you: {query}")  
-        txts = get_documents(index, query,cfg.SimilaritySearchCfg["min_score"])  
+        txts = get_documents(index, query,cfg.SimilaritySearchCfg["min_score"])["content"]
         client = AzureOpenAI()
         completion = client.chat.completions.create(
             model=cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["model_name"],

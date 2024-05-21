@@ -12,7 +12,8 @@ class ChatRequest(BaseModel):
     username: constr(min_length=1,max_length=60) 
 
 class ChatResponse(BaseModel):
-    response: str
+    answer: str
+    button: str
 
 conversation_manager = {}
 
@@ -30,9 +31,7 @@ async def chat(chat_request: ChatRequest):
 
         conversation = conversation_manager[username]
         response_message = conversation.ask(user_input) 
-
-
-        return {"response": response_message.content}
+        return response_message
     
     except Exception as e:
         return cfg.inneralError

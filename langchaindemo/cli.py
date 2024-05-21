@@ -10,7 +10,7 @@ def chat_loop():
             print(f"[{current_time}] you: {user_input}")  
             res = conversation.ask(question=f"{user_input}")
             current_time = datetime.now().strftime("%H:%M:%S")  
-            print(f"[{current_time}] Bot: {res.content}")  
+            print(f"[{current_time}] Bot: {res['answer']}")  
     
     except Exception as e:
         print("An error occurred:", e)
