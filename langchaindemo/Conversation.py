@@ -29,7 +29,6 @@ class Conversation:
     def ask(self,question):
         try:
             button=''
-            retcontent=''
             self.messages.append({"role": "user", "content": question})
             logger_info.info(f"{self.username} ask:{question}")
             logger_debug.info(f"{self.username}:{self.messages}");
