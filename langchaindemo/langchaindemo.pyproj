@@ -50,6 +50,12 @@
     <Compile Include="cfg.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="zp_cli.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="zp_conversation.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|VisualStudio|zdchat" />

@@ -87,6 +87,11 @@ ONLINE_LLM_MODEL = {
         "openai_proxy": "",
         "embedding":"text-embedding-3-large"
     },
+    "ZHIPU":{
+        "model_name": "glm-3-turbo",
+        "api_base_url":"https://open.bigmodel.cn/api/paas/v4/",
+        "api_key":"0b4045234105a0f658a24da0ba2b65c2.8pRUJKMUITyXdrym"
+        }
 }
 
 SimilaritySearchCfg={
