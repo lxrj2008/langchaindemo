@@ -5,6 +5,7 @@ import cfg,embedding
 from collections import deque
 from mylogging import setup_logging
 import requests
+import random
 
 os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
 os.environ["OPENAI_API_VERSION"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_version"]
@@ -113,8 +114,9 @@ class Conversation:
             
             logger_error.error(f"{self.username}：An error occurred: %s", e)
             if e.status_code==400 and e.code=='content_filter':
-                response_message = ErrorMessage(cfg.contentFilterAnswer)
-            if e.status_code==400 and e.code=='context_length_exceeded':
+                random_answer = random.choice(cfg.contentFilterAnswer)
+                response_message = ErrorMessage(random_answer)
+            elif e.status_code==400 and e.code=='context_length_exceeded':
                 self.messages=deque(copy.deepcopy(cfg.SystemPrompt))
                 self.round=0
                 response_message = ErrorMessage("本轮会话tokens已超上限，已帮您重置，请继续提问吧！")
