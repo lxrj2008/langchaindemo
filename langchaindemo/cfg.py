@@ -23,7 +23,7 @@ tools = [
                 },
                 "ContractDate": {
                     "type": "string",
-                    "pattern":"^\\d{4}$",
+                    "pattern":"^(?:[0-9]{2})(0[1-9]|1[0-2])$",
                     "description": "这是合约日期，必填项。比如2405,表示2024年5月份的合约，如果是LME（伦敦金属交易），ContractDate参数输入3M"
                 },
                 "strikePrice": {
