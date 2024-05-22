@@ -175,7 +175,7 @@ def Get_Contract_Information(ExchangeCode,ProductCode,ContractDate,commodityType
                                             f"手续费：{item['defaultFee']}\n"
                                             )   
                     num += 1
-                    if num>5:
+                    if num>3:
                         break
                 content=contract_info_string
             else:
