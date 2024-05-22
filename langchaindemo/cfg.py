@@ -54,8 +54,8 @@ tools = [
         {
     "type": "function",
     "function": {
-        "name": "answer_other_question",
-        "description": "回答工具{Get_Contract_Information}以外的其他问题。",
+        "name": "business_question",
+        "description": "回答公司产品问题、业务问题以及金融方面的常识性问题",
         "parameters": {
             "type": "object",
             "properties": {
@@ -70,13 +70,13 @@ tools = [
 }]
 
 SystemPrompt = [
-                    {"role": "system", "content": "你是上海直达软件公司训练的智能查询助手小达达，你能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题"},
+                    {"role": "system", "content": "你是上海直达软件公司训练的智能金融助手小达，你能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题"},
                     {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要信息"},
                     {"role": "system", "content": "当用户说你好时，你要告诉用户你是谁"},
                     {"role":"system","content":"只使用提供给你的函数"}
                ]
 
-ToolPrompt=f"根据知识库内容：[knowledge]，回答以下问题：[question]。如果你觉得知识库内容信息不足以回答这个问题，请回答不知道并且表明你的专长或者根据你已拥有的知识来回答"
+ToolPrompt=f"根据知识库内容：[knowledge]，详细回答以下问题：[question]。如果你觉得知识库内容信息不足以回答问题，请根据你已拥有的知识简明扼要地回答"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
