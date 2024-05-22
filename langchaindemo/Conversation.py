@@ -49,7 +49,6 @@ class Conversation:
                 self.messages.append(response_message)
                 for tool_call in tool_calls:
                     function_name = tool_call.function.name
-                    function_result = {}
                     args = tool_call.function.arguments
                     if function_name == "Get_Contract_Information":
                         logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
@@ -109,7 +108,6 @@ class Conversation:
                for mymsg in reversed(first_three_messages):
                    self.messages.appendleft(mymsg)
                self.round=0
-            logger_info.info(f"{self.username} answer:{response_message.content}");   
             logger_debug.info(f"{self.username}:{self.messages}");
         except Exception as e:
             
@@ -122,7 +120,7 @@ class Conversation:
                 response_message = ErrorMessage("本轮会话tokens已超上限，已帮您重置，请继续提问吧！")
             else:
                 response_message=ErrorMessage(cfg.inneralError)
-            logger_info.info(f"{self.username} answer:{response_message.content}"); 
+        logger_info.info(f"{self.username} answer:{response_message.content}"); 
         responsecontent={"answer":f"{response_message.content}","button":f"{button}"}
         return responsecontent
             
