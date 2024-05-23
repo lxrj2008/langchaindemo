@@ -1,5 +1,6 @@
 
-from fastapi import FastAPI
+from typing import Dict
+from fastapi import FastAPI,HTTPException
 from pydantic import BaseModel,constr
 from Conversation import Conversation  
 import uvicorn
@@ -16,6 +17,7 @@ class ChatResponse(BaseModel):
     button: str
 
 conversation_manager = {}
+conversation_manager: Dict[str, Conversation] = {}
 
 @app.post("/chat", response_model=ChatResponse,summary="Chat with Assistant", description="""请向助手提问吧.1、username必须要传，且是每个终端的值，切勿通过java api生成一个固定值传递
 2、AIChatService需要通过这个username这个参数来维护每个终端的多轮对话信息，以达到每个终端的ask和answer不会互相影响的目的""")
@@ -34,7 +36,7 @@ async def chat(chat_request: ChatRequest):
         return response_message
     
     except Exception as e:
-        return cfg.inneralError
+        raise HTTPException(status_code=500, detail=str(cfg.inneralError))
 
 
 
