@@ -11,20 +11,8 @@ from langchain_community.document_loaders.unstructured import UnstructuredFileLo
 from langchain_community.document_loaders.pdf import PyPDFDirectoryLoader
  
  
-# load PDF files from directory
-# def load_pdf_from_dir_2(directory_path):
-#     data = []
-#     for filename in os.listdir(directory_path):
-#         if filename.endswith(".pdf"):
-#             print(filename)
-#             # print the file name
-#             loader = PyPDFLoader(f'{directory_path}/{filename}')
-#             print(loader)
-#             data.append(loader.load())
-#     return data
+
  
- 
-# load PDF files from directory
 def load_pdf_from_dir(directory_path):
     loader = PyPDFDirectoryLoader(directory_path)
     print(loader)
@@ -32,7 +20,6 @@ def load_pdf_from_dir(directory_path):
     return data
  
  
-# load PDF files from a pdf file
 def load_pdf_from_one(filepath):
     data = ''
     if filepath.endswith(".pdf"):
@@ -44,7 +31,6 @@ def load_pdf_from_one(filepath):
     return data
  
  
-# load Word files(.doc/.docx) from directory
 def load_word_from_dir(directory_path):
     data = []
     for filename in os.listdir(directory_path):
@@ -57,7 +43,6 @@ def load_word_from_dir(directory_path):
     return data
  
  
-# load Word files(.doc/.docx) from a filename
 def load_word_from_one(filename):
     data = ''
     if filename.endswith(".doc") or filename.endswith(".docx"):
@@ -68,7 +53,6 @@ def load_word_from_one(filename):
     return data
  
  
-# load Text files(.txt) from directory
 def load_txt_from_dir(directory_path):
     data = []
     for filename in os.listdir(directory_path):
@@ -81,7 +65,6 @@ def load_txt_from_dir(directory_path):
     return data
  
  
-# load Text files(.doc/.docx) from a filename
 def load_text_from_one(filename):
     data = ''
     if filename.endswith(".txt"):
@@ -92,7 +75,6 @@ def load_text_from_one(filename):
     return data
  
  
-# load CSV files(.txt) from directory
 def load_csv_from_dir(directory_path):
     data = []
     for filename in os.listdir(directory_path):
@@ -105,7 +87,6 @@ def load_csv_from_dir(directory_path):
     return data
  
  
-# load CSV files(.doc/.docx) from a filename
 def load_csv_from_one(filename):
     data = ''
     if filename.endswith(".csv"):
@@ -124,6 +105,5 @@ def load_all_from_dir(directory_path, glob, show_progress=False, use_multithread
  
 if __name__ == '__main__':
     res = load_all_from_dir("knowledge_base/","*")
-    #res = load_txt_from_dir("knowledge_base/")
     print(res)
  

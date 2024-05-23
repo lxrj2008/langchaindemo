@@ -1,7 +1,4 @@
 
-from http import client
-import json
-from pydoc import doc
 from openai import AzureOpenAI 
 import os 
 import documentloader
@@ -86,7 +83,6 @@ def get_documents(index="faiss_index", query="",relevance_score=0):
     return data
 
 def get_mapping_documents(index="faiss_index", query="",relevance_score=0):
-    start_time = time.time()
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
     docs = db.similarity_search_with_relevance_scores(query,1)
     filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]

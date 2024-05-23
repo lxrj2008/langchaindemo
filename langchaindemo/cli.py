@@ -15,5 +15,4 @@ def chat_loop():
     except Exception as e:
         print("An error occurred:", e)
 
-# Start the chat loop
 chat_loop()

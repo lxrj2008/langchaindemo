@@ -94,7 +94,6 @@ class Conversation:
                first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
                # 计数器，用于跟踪完成的消息聊天轮数
                user_count = 0
-               # 遍历队列中的元素
                while self.messages:
                    # 获取队列中的下一个元素
                    msg = self.messages.popleft()
