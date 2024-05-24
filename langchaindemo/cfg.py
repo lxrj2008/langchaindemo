@@ -76,7 +76,7 @@ SystemPrompt = [
                     {"role": "system", "content": "当用户说你好时，你要告诉用户你是谁"}
                ]
 
-ToolPrompt=f"根据知识库内容：[knowledge]，详细回答以下问题：[question]，请用与提问相同的语种回答。如果你觉得知识库内容信息不足以回答问题，请回答不知道并且表明你的专长"
+ToolPrompt=f"根据以下[]里的内容：[knowledge]，详细回答以下[]的问题：[question]，请用与提问相同的语种回答。如果你觉得[]里的信息不足以回答问题，请回答不知道并且表明你的专长"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
