@@ -80,7 +80,7 @@ ToolPrompt=f"根据知识库内容：[knowledge]，详细回答以下问题：[q
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
-        "model_name": "gpt-4",
+        "model_name": "gpt-4o",
         "api_base_url": "https://zdai1.openai.azure.com/",
         "api_version":"2024-02-15-preview",
         "api_key": "66332ca65cac487e8d64e4d63309b8cd",
