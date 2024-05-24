@@ -39,6 +39,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="embedding.py" />
+    <Compile Include="GetTokens.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="main.py" />
     <Compile Include="mylogging.py">
       <SubType>Code</SubType>
