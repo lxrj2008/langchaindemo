@@ -28,12 +28,12 @@ tools = [
                 },
                 "strikePrice": {
                     "type": "number",
-                    "description": "行权价，如果是期权合约，请提供行权价"
+                    "description": "行权价，期权合约必填"
                 },
                 "putCall": {
                     "type": "string",
                     "enum": ["C", "P"],
-                    "description": "看涨看跌，如果是期权合约，请提供。看涨用C表示，看跌用P表示"
+                    "description": "看涨看跌，期权合约必填"
                 }
 
             },
