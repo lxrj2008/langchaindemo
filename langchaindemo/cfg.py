@@ -10,21 +10,21 @@ tools = [
             "properties": {
                 "ExchangeCode": {
                     "type": "string", 
-                    "description": "这是交易所代码，必填项"
+                    "description": "交易所代码，必填项.eg:CME"
                 },
                 "ProductCode": {
                     "type": "string",
-                    "description": "这是商品代码，必填项"
+                    "description": "商品代码，必填项.eg:CL"
                 },
                 "commodityType": {
                     "type": "string",
                     "enum": ["F", "O"],
-                    "description": "这是商品类型,必填项。期货合约是用F表示，期权合约是用O表示"
+                    "description": "商品类型,必填项。期货是用F表示，期权是用O表示"
                 },
                 "ContractDate": {
                     "type": "string",
                     "pattern":"^(?:[0-9]{2})(0[1-9]|1[0-2])$",
-                    "description": "这是合约日期，必填项。比如2405,表示2024年5月份的合约，如果是LME（伦敦金属交易），ContractDate参数输入3M"
+                    "description": "合约日期，必填项。eg:2405,表示2024年5月份的合约，如果是LME（伦敦金属交易），ContractDate参数输入3M"
                 },
                 "strikePrice": {
                     "type": "number",
@@ -33,7 +33,7 @@ tools = [
                 "putCall": {
                     "type": "string",
                     "enum": ["C", "P"],
-                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权合约），请提供putCall"
+                    "description": "看涨看跌，看涨用C表示，看跌用P表示，如果 commodityType 是 O（期权），请提供putCall"
                 }
 
             },
@@ -61,7 +61,7 @@ tools = [
             "properties": {
                 "question": {
                     "type": "string",
-                    "description": "用户提出的问题"
+                    "description": "用户提出的问题.eg:开户需要提前准备什么资料"
                 }
             },
             "required": ["question"]
@@ -70,13 +70,13 @@ tools = [
 }]
 
 SystemPrompt = [
-                    {"role": "system", "content": "你是上海直达软件公司训练的智能金融助手小达，你能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题"},
+                    {"role": "system", "content": "你是上海直达软件公司训练的智能助手小达，你能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题"},
                     {"role":"system","content":"请用与提问相同的语种回答"},
                     {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要信息"},
                     {"role": "system", "content": "当用户说你好时，你要告诉用户你是谁"}
                ]
 
-ToolPrompt=f"根据知识库内容：[knowledge]，详细回答以下问题：[question]，请用与提问相同的语种回答。如果你觉得知识库内容信息不足以回答问题，请根据你已拥有的知识简明扼要地回答"
+ToolPrompt=f"根据知识库内容：[knowledge]，详细回答以下问题：[question]，请用与提问相同的语种回答。如果你觉得知识库内容信息不足以回答问题，请回答不知道并且表明你的专长"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
