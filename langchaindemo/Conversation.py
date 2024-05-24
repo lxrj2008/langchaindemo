@@ -55,6 +55,7 @@ class Conversation:
 
             self.messages.append({"role": "assistant", "content": response_message.content})
             self.round += 1
+            logger_debug.info(f"{self.username}: ChatRound: {self.round}")
             self.handle_message_queue()
             logger_debug.info(f"{self.username}: {self.messages}")
 
@@ -117,7 +118,6 @@ class Conversation:
 
     def handle_message_queue(self):
         if self.round >= cfg.ChatRound:
-            logger_debug.info(f"{self.username}: ChatRound: {self.round}")
             # 弹出前三个元素并保存
             first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
             user_count = 0
