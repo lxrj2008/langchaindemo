@@ -96,7 +96,7 @@ ONLINE_LLM_MODEL = {
 }
 
 SimilaritySearchCfg={
-    "top_k":3,
+    "top_k":2,
     "fetch_k":20,
     "min_score":0.2,
     "mapping_min_score":0.3
