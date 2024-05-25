@@ -33,8 +33,9 @@ class Conversation:
     def ask(self, question):
         try:
             current_time = datetime.now()
-            if current_time - self.last_request_time > timedelta(hours=cfg.ReSet_Session_Interval):
+            if current_time - self.last_request_time > timedelta(hours=cfg.reste_session_interval):
                 self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
+                logger_debug.info(f"{self.username}: reset session")
             self.last_request_time = current_time
             button = ''
             self.messages.append({"role": "user", "content": question})

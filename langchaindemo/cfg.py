@@ -113,7 +113,7 @@ ChatRound=5
 wordsnum=300
 javaapi="http://192.168.200.10:16001/chatGPT/contractInfo"
 #超过24h没有交流，重置该Session的上下文
-ReSet_Session_Interval=24
+reste_session_interval=24
 
 contentFilterAnswer=[
     "我不能回答关于仇恨、性、暴力和自残相关的问题，对不起！",
