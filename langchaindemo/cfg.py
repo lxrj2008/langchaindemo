@@ -1,4 +1,5 @@
 
+
 tools = [
         {
     "type": "function",
@@ -76,7 +77,7 @@ SystemPrompt = [
                     {"role": "system", "content": "如果用户提出的问题不是关于查询合约数据，请使用 'business_question'工具。这类问题通常包括关于公司产品、服务、业务流程、技术等方面的询问。"}
                ]
 
-ToolPrompt=f"根据以下内容：[knowledge]，详细回答以下问题：[question]。如果你认为[knowledge]中的信息不足以回答问题，请回答'不知道'，并表明你的专长。"
+ToolPrompt=f"根据以下中括号内容：[knowledge]，详细回答以下小括号的问题：(question)。如果你认为中括号内的信息不足以回答问题，请回答'不知道'，并表明你的专长。"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
@@ -111,7 +112,8 @@ CompleteionsPara={"temperature":0.2,"max_tokens":500}
 ChatRound=5
 wordsnum=300
 javaapi="http://192.168.200.10:16001/chatGPT/contractInfo"
-
+#超过24h没有交流，重置该Session的上下文
+ReSet_Session_Interval=24
 
 contentFilterAnswer=[
     "我不能回答关于仇恨、性、暴力和自残相关的问题，对不起！",

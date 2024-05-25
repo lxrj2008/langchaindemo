@@ -5,6 +5,7 @@ from collections import deque
 from mylogging import setup_logging
 import requests
 import random
+from datetime import datetime, timedelta
 
 def setup_environment():
     os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
@@ -28,10 +29,13 @@ class Conversation:
     def __init__(self, username=None):
         self.username = username
         self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
-        self.round = 0
-
+        self.last_request_time = datetime.now()
     def ask(self, question):
         try:
+            current_time = datetime.now()
+            if current_time - self.last_request_time > timedelta(hours=cfg.ReSet_Session_Interval):
+                self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
+            self.last_request_time = current_time
             button = ''
             self.messages.append({"role": "user", "content": question})
             logger_info.info(f"{self.username} ask: {question}")
@@ -54,9 +58,9 @@ class Conversation:
                 logger_debug.info(f'{self.username}: no tools called')
 
             self.messages.append({"role": "assistant", "content": response_message.content})
-            self.round += 1
-            logger_debug.info(f"{self.username}: ChatRound: {self.round}")
-            self.handle_message_queue()
+            chat_round = sum(1 for msg in self.messages if isinstance(msg, dict) and msg.get("role") == "user")
+            if chat_round>=cfg.ChatRound:
+                self.handle_message_queue()
             logger_debug.info(f"{self.username}: {self.messages}")
 
         except Exception as e:
@@ -65,7 +69,7 @@ class Conversation:
                 random_answer = random.choice(cfg.contentFilterAnswer)
                 response_message = ErrorMessage(random_answer)
             elif e.status_code==400 and e.code=='context_length_exceeded':
-                self.reset_conversation()
+                self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
                 response_message = ErrorMessage("超过令牌限制，会话重置。请继续提问!")
             else:
                 response_message=ErrorMessage(cfg.inneralError)
@@ -117,26 +121,21 @@ class Conversation:
         return function_response
 
     def handle_message_queue(self):
-        if self.round >= cfg.ChatRound:
-            # 弹出前三个元素并保存
-            first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
-            user_count = 0
-            while self.messages:
-                #弹出
-                msg = self.messages.popleft()
-                if isinstance(msg, dict) and msg.get("role") == "user":
-                    user_count += 1
-                if user_count == 2:
-                    self.messages.appendleft(msg)
-                    break
-            # 将前三个元素放回队列，并且位置不变
-            for mymsg in reversed(first_three_messages):
-                self.messages.appendleft(mymsg)
-            self.round = 0
-
-    def reset_conversation(self):
-        self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
-        self.round = 0
+        # 弹出前三个元素并保存
+        first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
+        user_count = 0
+        while self.messages:
+            #弹出
+            msg = self.messages.popleft()
+            if isinstance(msg, dict) and msg.get("role") == "user":
+                user_count += 1
+            if user_count == 2:
+                self.messages.appendleft(msg)
+                break
+        # 将前三个元素放回队列，并且位置不变
+        for mymsg in reversed(first_three_messages):
+            self.messages.appendleft(mymsg)
+            
 
     def Get_Contract_Information(self, ExchangeCode, ProductCode, ContractDate, commodityType, strikePrice=None, putCall=None):
         try:
