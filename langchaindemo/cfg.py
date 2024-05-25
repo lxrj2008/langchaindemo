@@ -4,7 +4,7 @@ tools = [
     "type": "function",
     "function": {
         "name": "Get_Contract_Information",
-        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约日期和商品类型时，调用此工具获取合约信息。期权合约需要额外提供行权价和看涨看跌信息。",
+        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约日期和商品类型时，调用此工具获取合约信息。期权合约建议用户额外提供行权价和看涨看跌信息。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -28,12 +28,12 @@ tools = [
                 },
                 "strikePrice": {
                     "type": "number",
-                    "description": "行权价，期权合约必填"
+                    "description": "行权价，期权合约建议用户提供"
                 },
                 "putCall": {
                     "type": "string",
                     "enum": ["C", "P"],
-                    "description": "看涨看跌，期权合约必填"
+                    "description": "看涨看跌，期权合约建议用户提供"
                 }
 
             },
@@ -76,7 +76,7 @@ SystemPrompt = [
                     {"role": "system", "content": "如果用户提出的问题不是关于查询合约数据，请使用 'business_question'工具。这类问题通常包括关于公司产品、服务、业务流程、技术等方面的询问。"}
                ]
 
-ToolPrompt=f"根据以下内容：[knowledge]，详细回答以下问题：[question]。请用与提问相同的语种回答。如果你认为[knowledge]中的信息不足以回答问题，请回答'不知道'，并表明你的专长。"
+ToolPrompt=f"根据以下内容：[knowledge]，详细回答以下问题：[question]。如果你认为[knowledge]中的信息不足以回答问题，请回答'不知道'，并表明你的专长。"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
