@@ -66,8 +66,9 @@ def InitMappingIndex(path='exchangdoc/'):
 def get_documents(index="faiss_index", query="",relevance_score=0):
     start_time = time.time()
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
-    docs = db.similarity_search_with_relevance_scores(query,top_k)
-    filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]
+    #docs = db.similarity_search_with_relevance_scores(query,top_k)
+    #filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]
+    filtered_docs = db.similarity_search_with_relevance_scores(query,top_k,score_threshold=relevance_score)
     button_names = []
     for d in filtered_docs:
         match = re.search(button_name_pattern, d[0].page_content)
@@ -84,8 +85,9 @@ def get_documents(index="faiss_index", query="",relevance_score=0):
 
 def get_mapping_documents(index="faiss_index", query="",relevance_score=0):
     db = FAISS.load_local(index, embeddings,allow_dangerous_deserialization=True)
-    docs = db.similarity_search_with_relevance_scores(query,1)
-    filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]
+    #docs = db.similarity_search_with_relevance_scores(query,1)
+    #filtered_docs = [(doc, score) for doc, score in docs if score >= relevance_score]
+    filtered_docs = db.similarity_search_with_relevance_scores(query,1,score_threshold=relevance_score)
     docs_page_content = " ".join([d[0].page_content for d in filtered_docs]).strip()
     if docs_page_content:
         codevalue=query
