@@ -5,7 +5,7 @@ tools = [
     "type": "function",
     "function": {
         "name": "Get_Contract_Information",
-        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约日期和商品类型时，调用此工具获取合约信息。期权合约建议用户额外提供行权价和看涨看跌信息。",
+        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约号和商品类型时，调用此工具获取合约信息。期权合约建议用户额外提供行权价和看涨看跌信息。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -22,10 +22,10 @@ tools = [
                     "enum": ["F", "O"],
                     "description": "商品类型，必填项。期货用F表示，期权用O表示"
                 },
-                "ContractDate": {
+                "ContractNo": {
                     "type": "string",
-                    "pattern":"^(?:[0-9]{2})(0[1-9]|1[0-2])$",
-                    "description": "合约日期，必填项。例如：2405表示2024年5月份的合约，LME（伦敦金属交易）使用3M表示"
+                    #"pattern":"^(?:[0-9]{2})(0[1-9]|1[0-2])$",
+                    "description": "合约号，必填项。例如：2405表示2024年5月份的合约，LME（伦敦金属交易）使用3M表示"
                 },
                 "strikePrice": {
                     "type": "number",
@@ -38,7 +38,7 @@ tools = [
                 }
 
             },
-            "required": ["ExchangeCode", "commodityType","ProductCode", "ContractDate"],
+            "required": ["ExchangeCode", "commodityType","ProductCode", "ContractNo"],
             "if": {
                 "properties": {
                   "commodityType": { "const": "O" }

@@ -138,7 +138,7 @@ class Conversation:
             self.messages.appendleft(mymsg)
             
 
-    def Get_Contract_Information(self, ExchangeCode, ProductCode, ContractDate, commodityType, strikePrice=None, putCall=None):
+    def Get_Contract_Information(self, ExchangeCode, ProductCode, ContractNo, commodityType, strikePrice=None, putCall=None):
         try:
             content, button = '', ''
             logger_debug.info(f"Original ExchangeCode: {ExchangeCode}")
@@ -151,9 +151,11 @@ class Conversation:
             logger_debug.info(f"Mapped ProductCode: {ProductCode}")
 
             if commodityType.upper() == "O" and putCall:
-                ProductCode += f"_{putCall}"
+                pass
+                #ProductCode += f"_{putCall}"
 
-            data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractDate, "commodityType": commodityType, "strikePrice": strikePrice}
+            data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractNo, "commodityType": commodityType, "strikePrice": strikePrice}
+            logger_debug.info(f"{self.username} pass pram:{data}")
             response = requests.post(cfg.javaapi, headers={'Content-Type': 'application/json; charset=utf-8'}, json=data)
             response.encoding = 'utf-8'
 
