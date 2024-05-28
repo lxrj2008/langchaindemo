@@ -6,6 +6,7 @@ from mylogging import setup_logging
 import requests
 import random
 from datetime import datetime, timedelta
+import time
 
 def setup_environment():
     os.environ["AZURE_OPENAI_API_KEY"] = cfg.ONLINE_LLM_MODEL["AzureOpenAI"]["api_key"]
@@ -153,7 +154,7 @@ class Conversation:
             if commodityType.upper() == "O" and putCall:
                 pass
                 #ProductCode += f"_{putCall}"
-
+            start_time = time.time()
             data = {"exchange": ExchangeCode, "commodity": ProductCode, "contract": ContractNo, "commodityType": commodityType, "strikePrice": strikePrice}
             logger_debug.info(f"{self.username} pass pram:{data}")
             response = requests.post(cfg.javaapi, headers={'Content-Type': 'application/json; charset=utf-8'}, json=data)
@@ -167,6 +168,9 @@ class Conversation:
                     content = '未查询到您要的合约数据,请确认查询条件是否正确.'
             else:
                 logger_error.error(f"Failed to request Java API: {response.status_code}")
+            end_time = time.time()
+            elapsed_time = end_time - start_time  
+            logger_debug.info(f'call contractInfo api take time：{elapsed_time}秒')
 
         except Exception as e:
             logger_error.error(f"Get_Contract_Information error: {str(e)}")
