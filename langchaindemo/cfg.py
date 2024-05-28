@@ -31,11 +31,11 @@ tools = [
                     "type": "number",
                     "description": "行权价，期权合约必填。"
                 },
-                "putCall": {
-                    "type": "string",
-                    "enum": ["C", "P"],
-                    "description": "看涨看跌,选填项。"
-                }
+                #"putCall": {
+                #    "type": "string",
+                #    "enum": ["C", "P"],
+                #    "description": "看涨看跌,选填项。"
+                #}
 
             },
             "required": ["ExchangeCode", "commodityType","ProductCode", "ContractNo"],
