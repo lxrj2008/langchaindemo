@@ -5,36 +5,36 @@ tools = [
     "type": "function",
     "function": {
         "name": "Get_Contract_Information",
-        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约号和商品类型时，调用此工具获取合约信息。期权合约建议用户额外提供行权价和看涨看跌信息。",
+        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约号和商品类型时，调用此工具获取合约信息。对于期权合约，还需要提供行权价。",
         "parameters": {
             "type": "object",
             "properties": {
                 "ExchangeCode": {
                     "type": "string", 
-                    "description": "交易所代码，必填项。例如：CME"
+                    "description": "交易所代码，必填项。例如：CME。"
                 },
                 "ProductCode": {
                     "type": "string",
-                    "description": "商品代码，必填项。例如：CL"
+                    "description": "商品代码，必填项。例如：CL。"
                 },
                 "commodityType": {
                     "type": "string",
                     "enum": ["F", "O"],
-                    "description": "商品类型，必填项。期货用F表示，期权用O表示"
+                    "description": "商品类型，必填项。期货用“F”表示，期权用“O”表示。"
                 },
                 "ContractNo": {
                     "type": "string",
                     #"pattern":"^(?:[0-9]{2})(0[1-9]|1[0-2])$",
-                    "description": "合约号，必填项。例如：2405表示2024年5月份的合约，LME（伦敦金属交易）使用3M表示"
+                    "description": "合约号，必填项。例如：2405表示2024年5月份的合约，LME（伦敦金属交易）使用3M表示。"
                 },
                 "strikePrice": {
                     "type": "number",
-                    "description": "行权价，期权合约建议用户提供"
+                    "description": "行权价，期权合约必填。"
                 },
                 "putCall": {
                     "type": "string",
                     "enum": ["C", "P"],
-                    "description": "看涨看跌，期权合约建议用户提供"
+                    "description": "看涨看跌,选填项。"
                 }
 
             },
@@ -45,7 +45,7 @@ tools = [
                   }
                 },
               "then": {
-                "required": ["putCall","strikePrice"]
+                "required": ["strikePrice"]
               }
 
         }
@@ -56,7 +56,7 @@ tools = [
     "type": "function",
     "function": {
         "name": "business_question",
-        "description": "适用于回答用户提出的除查询合约数据以外的其他问题。",
+        "description": "适用于回答用户提出的除查询合约数据以外的其他问题。对于非合约查询问题，请使用 'business_question' 工具。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -71,13 +71,13 @@ tools = [
 }]
 
 SystemPrompt = [
-                    {"role": "system", "content": "你是上海直达软件公司训练的智能助手小达，你能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题。"},
-                    {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要信息。"},
-                    {"role": "system", "content": "你应该使用客户提问的语种进行交流。"},
-                    {"role": "system", "content": "如果用户提出的问题不是关于查询合约数据，请使用 'business_question'工具。这类问题通常包括关于公司产品、服务、业务流程、技术等方面的询问。"}
+                    {"role": "system", "content": "你是上海直达软件公司训练的智能助手小达，能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题。"},
+                    {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请主动要求用户提供必要信息，以确保查询结果的准确性。"},
+                    {"role": "system", "content": "你应该使用客户提问时的语种进行交流。"},
+                    {"role": "system", "content": "如果用户提出的问题不是关于查询合约数据，请使用 'business_question'工具。这类问题通常包括公司产品、服务、业务流程、技术等方面的询问。"}
                ]
 
-ToolPrompt=f"根据以下中括号内容：[knowledge]，详细回答以下小括号的问题：(question)。如果你认为中括号内的信息不足以回答问题，请回答'不知道'，并表明你的专长。"
+ToolPrompt=f"根据以下中括号内容：[knowledge]，详细回答以下小括号的问题：(question)。如果中括号内的信息不足以回答问题，请回答'不知道'，并表明你的专长。"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
