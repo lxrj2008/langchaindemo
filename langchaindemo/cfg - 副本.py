@@ -1,51 +1,50 @@
 
-
 tools = [
         {
     "type": "function",
     "function": {
         "name": "Get_Contract_Information",
-        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约号和商品类型时，调用此工具获取合约信息。对于期权合约，还需要提供行权价。",
+        "description": "查询合约数据。当用户提供了交易所代码、产品代码、合约日期和商品类型时，调用此工具获取合约信息。期权合约需要额外提供行权价和看涨看跌信息。",
         "parameters": {
             "type": "object",
             "properties": {
                 "ExchangeCode": {
                     "type": "string", 
-                    "description": "交易所代码，必填项。例如：CME。"
+                    "description": "交易所代码，必填项。例如：CME"
                 },
                 "ProductCode": {
                     "type": "string",
-                    "description": "商品代码，必填项。例如：CL。"
+                    "description": "商品代码，必填项。例如：CL"
                 },
                 "commodityType": {
                     "type": "string",
                     "enum": ["F", "O"],
-                    "description": "商品类型，必填项。期货用“F”表示，期权用“O”表示。"
+                    "description": "商品类型，必填项。期货用F表示，期权用O表示"
                 },
-                "ContractNo": {
+                "ContractDate": {
                     "type": "string",
-                    #"pattern":"^(?:[0-9]{2})(0[1-9]|1[0-2])$",
-                    "description": "合约号，必填项。例如：2405表示2024年5月份的合约，LME（伦敦金属交易）使用3M表示。"
+                    "pattern":"^(?:[0-9]{2})(0[1-9]|1[0-2])$",
+                    "description": "合约日期，必填项。例如：2405表示2024年5月份的合约，LME（伦敦金属交易）使用3M表示"
                 },
                 "strikePrice": {
                     "type": "number",
-                    "description": "行权价，期权合约必填。"
+                    "description": "行权价，期权合约必填"
                 },
-                #"putCall": {
-                #    "type": "string",
-                #    "enum": ["C", "P"],
-                #    "description": "看涨看跌,选填项。"
-                #}
+                "putCall": {
+                    "type": "string",
+                    "enum": ["C", "P"],
+                    "description": "看涨看跌，期权合约必填"
+                }
 
             },
-            "required": ["ExchangeCode", "commodityType","ProductCode", "ContractNo"],
+            "required": ["ExchangeCode", "commodityType","ProductCode", "ContractDate"],
             "if": {
                 "properties": {
                   "commodityType": { "const": "O" }
                   }
                 },
               "then": {
-                "required": ["strikePrice"]
+                "required": ["putCall","strikePrice"]
               }
 
         }
@@ -56,13 +55,13 @@ tools = [
     "type": "function",
     "function": {
         "name": "business_question",
-        "description": "回答除查询合约数据以外的所有其他问题",
+        "description": "查询业务问题。适用于用户提出开户、出入金、账户、交易、保证金、合约、行情、权限、费用、换汇、风控等相关问题。",
         "parameters": {
             "type": "object",
             "properties": {
                 "question": {
                     "type": "string",
-                    "description": "用户提问。"
+                    "description": "用户提出的问题。例如：开户需要提前准备什么资料"
                 }
             },
             "required": ["question"]
@@ -71,11 +70,13 @@ tools = [
 }]
 
 SystemPrompt = [
-                    {"role": "system", "content": "你是上海直达软件公司训练的智能助手小达，能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题。合约数据包括合约代码、合约名称、商品代码、商品名称、币种、商品类型、交易所名称、账面跳点、最小变动单位、进价单位、首次通知日、合约到期日、最后交易日、行权价、保证金、手续费等。"},
-                    {"role": "system", "content": "你有两个工具可以使用：一个是用于查询合约数据的 Get_Contract_Information 工具，另一个是用于回答其他所有问题的 business_question 工具。对于任何关于合约信息的查询，请使用 Get_Contract_Information 工具。对于除查询合约数据以外的所有其他问题，请使用 business_question 工具。"},
+                    {"role": "system", "content": "你是上海直达软件公司训练的智能助手小达，你能够帮助客户查询合约信息以及回答公司相关产品和业务方面的问题。"},
+                    {"role": "system", "content": "不要假设或猜测传入函数的参数值。如果用户的描述不明确，请要求用户提供必要信息。"},
+                    {"role": "system", "content": "当用户向你问好时，请告诉他们你是上海直达软件公司训练的智能助手小达。"},
+                    {"role": "system", "content": "对于常见的通用知识问题，请直接简要回答。如果问题涉及合约信息或特定的业务问题，请根据需要调用相应的工具。"}
                ]
 
-ToolPrompt=f"根据以下中括号内容：[knowledge]，详细回答以下小括号的问题：(question)。如果中括号内的信息不足以回答问题，请务必回答'不擅长'，并表明你的专长。"
+ToolPrompt=f"根据以下内容：[knowledge]，详细回答以下问题：[question]。请用与提问相同的语言回答。如果你认为[knowledge]中的信息不足以回答问题，请回答'不知道'，并表明你的专长。"
 
 ONLINE_LLM_MODEL = {
     "AzureOpenAI": {
@@ -94,7 +95,7 @@ ONLINE_LLM_MODEL = {
 }
 
 SimilaritySearchCfg={
-    "top_k":2,
+    "top_k":4,
     "fetch_k":20,
     "min_score":0.2,
     "mapping_min_score":0.3
@@ -106,12 +107,11 @@ TextSplitterCfg={
 
 hostinfo={"hostname":"192.168.200.57","port":"8000"}
 
-CompleteionsPara={"temperature":0.5,"max_tokens":600}
+CompleteionsPara={"temperature":0.3,"max_tokens":500}
 ChatRound=5
 wordsnum=300
 javaapi="http://192.168.200.10:16001/chatGPT/contractInfo"
-#超过24h没有交流，重置该Session的上下文
-reset_session_interval=24
+
 
 contentFilterAnswer=[
     "我不能回答关于仇恨、性、暴力和自残相关的问题，对不起！",

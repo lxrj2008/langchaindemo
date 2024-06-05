@@ -34,10 +34,13 @@ class Conversation:
     def ask(self, question):
         try:
             current_time = datetime.now()
-            if current_time - self.last_request_time > timedelta(hours=cfg.reste_session_interval):
+            if current_time - self.last_request_time > timedelta(hours=cfg.reset_session_interval):
                 self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
                 logger_debug.info(f"{self.username}: reset session")
             self.last_request_time = current_time
+            chat_round = sum(1 for msg in self.messages if isinstance(msg, dict) and msg.get("role") == "user")
+            if chat_round>=cfg.ChatRound:
+                self.handle_message_queue()
             button = ''
             self.messages.append({"role": "user", "content": question})
             logger_info.info(f"{self.username} ask: {question}")
@@ -60,9 +63,6 @@ class Conversation:
                 logger_debug.info(f'{self.username}: no tools called')
 
             self.messages.append({"role": "assistant", "content": response_message.content})
-            chat_round = sum(1 for msg in self.messages if isinstance(msg, dict) and msg.get("role") == "user")
-            if chat_round>=cfg.ChatRound:
-                self.handle_message_queue()
             logger_debug.info(f"{self.username}: {self.messages}")
 
         except Exception as e:
@@ -70,6 +70,7 @@ class Conversation:
             if e.status_code==400 and e.code=='content_filter':
                 random_answer = random.choice(cfg.contentFilterAnswer)
                 response_message = ErrorMessage(random_answer)
+                self.messages.pop()
             elif e.status_code==400 and e.code=='context_length_exceeded':
                 self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
                 response_message = ErrorMessage("超过令牌限制，会话重置。请继续提问!")
@@ -162,10 +163,13 @@ class Conversation:
 
             if response.status_code == 200:
                 datacontent = response.json().get("data", [])
+                if datacontent and commodityType.upper()=='F':
+                   datacontent=self.filter_contracts(datacontent, ExchangeCode, ProductCode)
                 if datacontent:
                     content = self.format_contract_info(datacontent)
                 else:
                     content = '未查询到您要的合约数据,请确认查询条件是否正确.'
+                    logger_debug.info(f"{self.username}，{content}")
             else:
                 logger_error.error(f"Failed to request Java API: {response.status_code}")
             end_time = time.time()
@@ -176,6 +180,9 @@ class Conversation:
             logger_error.error(f"Get_Contract_Information error: {str(e)}")
 
         return {"content": content, "button": button}
+
+    def filter_contracts(self,contracts, exchange_no, commodity_no):
+        return list(filter(lambda x: x['exchangeNo'] == exchange_no and x['commodityNo'] == commodity_no, contracts))
 
     def format_contract_info(self, datacontent):
         contract_info_string = ''
