@@ -106,12 +106,12 @@ class Conversation:
             if function_name == "Get_Contract_Information":
                 logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
                 function_response=self.Get_Contract_Information(**args)
-            elif function_name == "business_question":
+            elif function_name == "any_other_questions":
                 logger_debug.info(f"{self.username}:functionName:{function_name},args:{args}");
-                function_response=self.business_question(**args)
+                function_response=self.any_other_questions(**args)
             else:
                 logger_debug.info(f"{self.username}:no function selected,but default functionName:{function_name},args:{args}");
-                function_response=self.business_question(**args)
+                function_response=self.any_other_questions(**args)
             self.messages.append(
                 {
                     "tool_call_id": tool_call.id,
@@ -209,7 +209,7 @@ class Conversation:
             )
         return contract_info_string
 
-    def business_question(self, question):
+    def any_other_questions(self, question):
         index = "faiss_index"
         txts = embedding.get_documents(index, question, cfg.SimilaritySearchCfg["min_score"])
         return txts
