@@ -29,13 +29,13 @@ class ErrorMessage:
 class Conversation:
     def __init__(self, username=None):
         self.username = username
-        self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
+        self.messages = deque(copy.deepcopy(cfg.fixed_SystemPrompt))
         self.last_request_time = datetime.now()
     def ask(self, question):
         try:
             current_time = datetime.now()
             if current_time - self.last_request_time > timedelta(hours=cfg.reset_session_interval):
-                self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
+                self.messages = deque(copy.deepcopy(cfg.fixed_SystemPrompt))
                 logger_debug.info(f"{self.username}: reset session")
             self.last_request_time = current_time
             chat_round = sum(1 for msg in self.messages if isinstance(msg, dict) and msg.get("role") == "user")
@@ -72,7 +72,7 @@ class Conversation:
                 response_message = ErrorMessage(random_answer)
                 self.messages.pop()
             elif e.status_code==400 and e.code=='context_length_exceeded':
-                self.messages = deque(copy.deepcopy(cfg.SystemPrompt))
+                self.messages = deque(copy.deepcopy(cfg.fixed_SystemPrompt))
                 response_message = ErrorMessage("超过令牌限制，会话重置。请继续提问!")
             else:
                 response_message=ErrorMessage(cfg.inneralError)
@@ -121,11 +121,12 @@ class Conversation:
                     "content": cfg.ToolPrompt.replace("knowledge", function_response["content"]).replace("question", question)
                 }
             )
+        self.messages.append(cfg.dynamic_SystemPrompt)
         return function_response
 
     def handle_message_queue(self):
         # 弹出前三个元素并保存
-        first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
+        first_three_messages = [self.messages.popleft() for _ in range(len(cfg.fixed_SystemPrompt))]
         user_count = 0
         while self.messages:
             #弹出

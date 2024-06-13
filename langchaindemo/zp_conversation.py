@@ -22,7 +22,7 @@ class ZPConversation:
     def __init__(self,username=None):
         self.username=username
         self.tools=cfg.tools
-        self.messages = deque(copy.deepcopy(cfg.SystemPrompt))#first in first out queue
+        self.messages = deque(copy.deepcopy(cfg.fixed_SystemPrompt))#first in first out queue
         self.round=0;
 
     def ask(self,question):
@@ -90,7 +90,7 @@ class ZPConversation:
             if self.round >= cfg.ChatRound:
                logger_debug.info(f"{self.username}:ChatRound:{self.round}");
                # 弹出前三个元素并保存
-               first_three_messages = [self.messages.popleft() for _ in range(len(cfg.SystemPrompt))]
+               first_three_messages = [self.messages.popleft() for _ in range(len(cfg.fixed_SystemPrompt))]
                # 计数器，用于跟踪完成的消息聊天轮数
                user_count = 0
                # 遍历队列中的元素

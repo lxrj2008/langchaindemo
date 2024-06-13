@@ -16,7 +16,7 @@ enc = tiktoken.get_encoding("cl100k_base")
 
 # 计算 tokens 数量
 tools_tokens = sum([len(enc.encode(str(tool))) for tool in cfg.tools])
-system_prompt_tokens = sum([len(enc.encode(prompt["content"])) for prompt in cfg.SystemPrompt])
+system_prompt_tokens = sum([len(enc.encode(prompt["content"])) for prompt in cfg.fixed_SystemPrompt])
 tool_prompt_tokens = len(enc.encode(cfg.ToolPrompt))
 
 # 输出结果
