@@ -121,7 +121,6 @@ class Conversation:
                     "content": cfg.ToolPrompt.replace("knowledge", function_response["content"]).replace("question", question)
                 }
             )
-        self.messages.append(cfg.dynamic_SystemPrompt)
         return function_response
 
     def handle_message_queue(self):
